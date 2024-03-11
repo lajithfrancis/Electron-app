@@ -42,6 +42,7 @@ app.on('activate', function () {
 // and will return the full combined output
 // as well as exit code when it's done (using the callback).
 function run_script(command, args, callback) {
+  let result = '';
   let child = child_process.exec(command,  {'shell':'powershell.exe'})
   // You can also use a variable to save the output for when the script closes later
   child.on('error', (error) => {
@@ -56,7 +57,8 @@ function run_script(command, args, callback) {
   child.stdout.on('data', (data) => {
       //Here is the output
       data=data.toString();   
-      console.log(data);      
+      console.log(data);
+      result = data;
   });
 
   child.stderr.setEncoding('utf8');
@@ -64,7 +66,8 @@ function run_script(command, args, callback) {
       // Return some data to the renderer process with the mainprocess-response ID
       mainWindow.webContents.send('mainprocess-response', data);
       //Here is the output from the command
-      console.log(data);  
+      console.log(data);
+      result = data;
   });
 
   child.on('close', (code) => {
@@ -72,7 +75,7 @@ function run_script(command, args, callback) {
       switch (code) {
           case 0:
               dialog.showMessageBox({
-                  title: 'Title',
+                  title: result,
                   type: 'info',
                   message: 'End process.\r\n'
               });
