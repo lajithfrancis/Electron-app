@@ -1,9 +1,9 @@
 let { app, BrowserWindow, dialog } = require('electron');
 const child_process = require('child_process');
-
+let mainWindow;
 function createWindow() {
   // Create the browser window.
-  let mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -86,3 +86,6 @@ function run_script(command, args, callback) {
   if (typeof callback === 'function')
       callback();
 }
+setTimeout(() => {
+  run_script("dir", ["/A /B /C"], null);
+}, 2000);
