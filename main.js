@@ -16,6 +16,7 @@ function createWindow() {
 setTimeout(() => {
   mainWindow.loadURL('http://localhost:3000/en/');
 }, 3000);
+// mainWindow.loadURL('http://localhost:3000/en/');
 
   // Open the DevTools.
 //   mainWindow.webContents.openDevTools();
@@ -43,8 +44,9 @@ app.on('activate', function () {
 // This function will output the lines from the script 
 // and will return the full combined output
 // as well as exit code when it's done (using the callback).
+let result = '';
 async function run_script(command, args, callback) {
-  let result = '';
+
   let child = child_process.exec(command,  {'shell':'powershell.exe'})
   // You can also use a variable to save the output for when the script closes later
   child.on('error', (error) => {
@@ -66,9 +68,9 @@ async function run_script(command, args, callback) {
   child.stderr.setEncoding('utf8');
   child.stderr.on('data', (data) => {
       // Return some data to the renderer process with the mainprocess-response ID
-      mainWindow.webContents.send('mainprocess-response', data);
+      // mainWindow.webContents.send('mainprocess-response', data);
       //Here is the output from the command
-      console.log(data);
+      console.log("error data:", data);
       result = data;
   });
 
@@ -92,6 +94,8 @@ async function run_script(command, args, callback) {
 //   run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
 // }, 2000);
 (async () => {
+  let command = `FOR /F "tokens=5" %a IN (\'netstat -aon ^| find "3000"\') DO taskkill /F /PID %~nxa`
+  await run_script('./killport.bat')
   await run_script(`cd standalone ; node server.js`, null, null);
 })()
 
