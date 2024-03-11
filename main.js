@@ -41,7 +41,7 @@ app.on('activate', function () {
 // This function will output the lines from the script 
 // and will return the full combined output
 // as well as exit code when it's done (using the callback).
-function run_script(command, args, callback) {
+async function run_script(command, args, callback) {
   let result = '';
   let child = child_process.exec(command,  {'shell':'powershell.exe'})
   // You can also use a variable to save the output for when the script closes later
@@ -89,4 +89,7 @@ function run_script(command, args, callback) {
 // setTimeout(() => {
 //   run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
 // }, 2000);
-run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
+(async () => {
+  await run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
+})()
+
