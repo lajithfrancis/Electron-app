@@ -42,10 +42,7 @@ app.on('activate', function () {
 // and will return the full combined output
 // as well as exit code when it's done (using the callback).
 function run_script(command, args, callback) {
-  var child = child_process.spawn(command, args, {
-      encoding: 'utf8',
-      shell: true
-  });
+  let child = child_process.exec(command,  {'shell':'powershell.exe'})
   // You can also use a variable to save the output for when the script closes later
   child.on('error', (error) => {
       dialog.showMessageBox({
@@ -86,6 +83,7 @@ function run_script(command, args, callback) {
   if (typeof callback === 'function')
       callback();
 }
-setTimeout(() => {
-  run_script("dir", ["/A /B /C"], null);
-}, 2000);
+// setTimeout(() => {
+//   run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
+// }, 2000);
+run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
