@@ -1,0 +1,1 @@
+"use strict";exports.id=838,exports.ids=[838],exports.modules={3838:e=>{e.exports=JSON.parse('{"title":"ADMIN PANEL STARTSEITE SEITE","vessel":"SCHIFF","office":"B\xdcRO"}')}};

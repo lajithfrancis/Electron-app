@@ -13,7 +13,9 @@ function createWindow() {
 
   // Load your application URL.
 //   mainWindow.loadURL('https://vendor-portal.prodigymarinesolutions.com/en/login');
-  mainWindow.loadURL('https://vendorportal-uat.prodigymarinesolutions.com/en/login');
+setTimeout(() => {
+  mainWindow.loadURL('http://localhost:3000/en/');
+}, 3000);
 
   // Open the DevTools.
 //   mainWindow.webContents.openDevTools();
@@ -90,6 +92,6 @@ async function run_script(command, args, callback) {
 //   run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
 // }, 2000);
 (async () => {
-  await run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
+  await run_script(`cd standalone ; node server.js`, null, null);
 })()
 
