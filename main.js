@@ -1,6 +1,19 @@
 let { app, BrowserWindow, dialog } = require('electron');
 const child_process = require('child_process');
+const path = require('path');
+const fs = require('fs');
+const { homedir } = require('os');
+
+
 let mainWindow;
+const dbName = '/mydb.db';
+const fullDbPath = path.join(path.join(homedir() + dbName));
+
+if(!fs.existsSync(fullDbPath)) {
+  const createStream = fs.createWriteStream(fullDbPath);
+  createStream.end();
+}
+
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -53,7 +66,7 @@ async function run_script(command, args, callback) {
       dialog.showMessageBox({
           title: 'Title',
           type: 'warning',
-          message: 'Error occured.\r\n' + error
+          message: 'Error occurred.\r\n' + error
       });
   });
 
@@ -90,9 +103,9 @@ async function run_script(command, args, callback) {
   if (typeof callback === 'function')
       callback();
 }
-// setTimeout(() => {
-//   run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
-// }, 2000);
+setTimeout(() => {
+  run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
+}, 2000);
 (async () => {
   let command = `FOR /F "tokens=5" %a IN ('netstat -aon ^| find "3000"') DO taskkill /F /PID %~nxa`
   await run_script('./killport.bat')
