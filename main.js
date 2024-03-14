@@ -106,9 +106,9 @@ async function run_script(command, args, callback) {
 setTimeout(() => {
   run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
 }, 2000);
-(async () => {
-  let command = `FOR /F "tokens=5" %a IN ('netstat -aon ^| find "3000"') DO taskkill /F /PID %~nxa`
-  await run_script('./killport.bat')
-  await run_script(`cd standalone ; node server.js`, null, null);
-})()
+// (async () => {
+//   let command = `FOR /F "tokens=5" %a IN ('netstat -aon ^| find "3000"') DO taskkill /F /PID %~nxa`
+//   await run_script('./launch.bat')
+//   // await run_script(`cd standalone ; node server.js`, null, null);
+// })()
 
