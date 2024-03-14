@@ -3,7 +3,7 @@ const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const { homedir } = require('os');
-
+console.log("app.getAppPath(): ", app.getAppPath())
 
 let mainWindow;
 const dbName = '/mydb.db';
@@ -14,7 +14,7 @@ if(!fs.existsSync(fullDbPath)) {
   createStream.end();
 }
 
-function createWindow() {
+async function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
@@ -24,25 +24,42 @@ function createWindow() {
     }
   });
 
+  await launch()
   // Load your application URL.
-//   mainWindow.loadURL('https://vendor-portal.prodigymarinesolutions.com/en/login');
-setTimeout(() => {
+  //   mainWindow.loadURL('https://vendor-portal.prodigymarinesolutions.com/en/login');
   mainWindow.loadURL('http://localhost:3000/en/');
-}, 3000);
-// mainWindow.loadURL('http://localhost:3000/en/');
-
   // Open the DevTools.
-//   mainWindow.webContents.openDevTools();
+  //   mainWindow.webContents.openDevTools();
 
-mainWindow.on('closed', function () {
+  mainWindow.on('closed', async function () {
+    await killPort()
+    console.log('script run for launch.bat in closed')
     mainWindow = null;
   });
 
+  mainWindow.on('close', async function () {
+    await killPort()
+    console.log('script run for launch.bat in close')
+  })
+
 }
+
+// You can use 'before-quit' instead of (or with) the close event
+app.on('before-quit', async function (e) {
+  await killPort()
+  console.log('script run for launch.bat in before-quit')
+  // Handle menu-item or keyboard shortcut quit here
+  // if(!force_quit){
+  //     e.preventDefault();
+  //     mainWindow.hide();
+  // }
+});
 
 app.on('ready', createWindow);
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', async function () {
+  await killPort()
+  console.log('script run for launch.bat in window-all-closed')
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -54,6 +71,23 @@ app.on('activate', function () {
   }
 });
 
+const killPort = () => {
+  return new Promise((resolve) => {
+    run_script(`npx kill-port 3000`)
+    setTimeout(() => {
+      resolve(true)
+    }, 2000);
+  })
+}
+
+const launch = () => {
+  return new Promise((resolve) => {
+    run_script(`cd standalone ; node server.js`, null, null);
+    setTimeout(() => {
+      resolve(true)
+    }, 2000);
+  })
+}
 // This function will output the lines from the script 
 // and will return the full combined output
 // as well as exit code when it's done (using the callback).
@@ -103,12 +137,12 @@ async function run_script(command, args, callback) {
   if (typeof callback === 'function')
       callback();
 }
-setTimeout(() => {
-  run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
-}, 2000);
+// setTimeout(() => {
+//   run_script(`Test-Path -Path "C:/Program Files/nodejs"`, null, null);
+// }, 2000);
 // (async () => {
 //   let command = `FOR /F "tokens=5" %a IN ('netstat -aon ^| find "3000"') DO taskkill /F /PID %~nxa`
-//   await run_script('./launch.bat')
-//   // await run_script(`cd standalone ; node server.js`, null, null);
+//   await run_script(`${app.getAppPath()}/launch.bat`)
+//   await run_script(`cd ${app.getAppPath()}/standalone ; node server.js`, null, null);
 // })()
 

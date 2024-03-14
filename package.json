@@ -17,6 +17,9 @@
     "directories": {
       "output": "output"
     },
+    "extraFiles": [
+      "standalone"
+    ],
     "mac": {
       "target": "dmg"
     },
