@@ -9,8 +9,7 @@ const { runScript } = require('./src/run-script');
 const { logToFile } = require('./src/log');
 const { launch } = require('./src/launch');
 const autoLauncher = new AutoLaunch({
-  name: 'My Electron App Setup 1.0.0',
-  isHidden: true
+  name: 'My Electron App Setup 1.0.0'
 });
 
 autoLauncher.enable();

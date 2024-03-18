@@ -18,8 +18,7 @@ function checkPortStatus(reload) {
     if (err.code === 'ECONNREFUSED') {
       console.log(`Port ${PORT} is not active`);
       logToFile(`Port ${PORT} is not active`);
-      await launch();
-      reload();
+      await launch(reload);
     } else {
       console.error(`Error occurred while checking port ${PORT}:`, err);
     }
