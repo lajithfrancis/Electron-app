@@ -1,29 +1,19 @@
-let { app, BrowserWindow, dialog } = require('electron');
+let { app, BrowserWindow } = require('electron');
 const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const { homedir } = require('os');
 console.log("app.getAppPath(): ", app.getAppPath())
 const AutoLaunch = require('auto-launch');
-const net = require('net');
+const { checkPortStatus } = require('./check-port-status');
+const { runScript } = require('./run-script');
+const { logToFile } = require('./log');
 const autoLauncher = new AutoLaunch({
   name: 'My Electron App Setup 1.0.0',
+  isHidden: true
 });
 
 autoLauncher.enable();
-const logFilePath = path.join(homedir(), 'electron-app.log');
-// Function to log messages to a file
-function logToFile(message) {
-  const timestamp = new Date().toISOString();
-  const logMessage = `${timestamp}: ${message}\n`;
-
-  // Append the log message to the log file
-  fs.appendFile(logFilePath, logMessage, (err) => {
-    if (err) {
-      console.error('Error writing to log file:', err);
-    }
-  });
-}
 
 let mainWindow;
 const dbName = '/mydb.db';
@@ -49,8 +39,6 @@ async function createWindow() {
   // Load your application URL.
   //   mainWindow.loadURL('https://vendor-portal.prodigymarinesolutions.com/en/login');
   mainWindow.loadURL('http://localhost:3000/en/');
-  // Open the DevTools.
-  //   mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', async function () {
     await killPort()
@@ -78,11 +66,8 @@ app.on('before-quit', async function (e) {
   // }
 });
 
-app.on('ready', () => {
-  createWindow()
-  checkPortStatus()
-  // Call the function every 10 seconds
-  // setInterval(checkPortStatus, 10000);
+app.on('ready', async () => {
+  createWindow();
 });
 
 app.on('window-all-closed', async function () {
@@ -103,8 +88,7 @@ let isLaunched = false;
 
 const killPort = () => {
   return new Promise((resolve) => {
-    // run_script(`npx kill-port 3000`)
-    run_script(`./kill-port.bat`)
+    runScript(`${app.getAppPath()}/kill-port.bat`)
     setTimeout(() => {
       resolve(true)
       isLaunched = false;
@@ -116,7 +100,7 @@ const launch = () => {
   return new Promise((resolve) => {
     // let interval = setInterval(() => {
     //   if (!isLaunched) {
-    //     run_script(`cd standalone ; node server.js`, null, null);
+    //     runScript(`cd standalone ; node server.js`, null, null);
     //     setTimeout(() => {
     //       resolve(true)
     //       isLaunched = true
@@ -129,8 +113,27 @@ const launch = () => {
     //   }
     // }, 10_000);
 
-    // run_script(`cd standalone ; node server.js`, null, null);
-    let child = child_process.spawn('./startup-server.bat', { 'shell': 'powershell.exe' })
+    // runScript(`cd standalone ; node server.js`, null, null);
+    // let child = child_process.spawn('./startup-server.bat', { 'shell': 'powershell.exe' })
+
+    let child = child_process.spawn('powershell.exe', [
+      `${app.getAppPath()}/startup-server.bat`
+    ])
+    child.stdout.on("data", function (data) {
+      console.log("Powershell Data: " + data);
+      logToFile("Powershell Data: " + data);
+      mainWindow.reload();
+    });
+    child.stderr.on("data", function (data) {
+      console.log("Powershell Errors: " + data);
+      logToFile("Powershell Errors: " + data);
+    });
+    child.on("exit", function () {
+      console.log("Powershell Script finished");
+      logToFile("Powershell Script finished");
+      mainWindow.reload();
+    });
+    child.stdin.end();
     setTimeout(() => {
       resolve(true)
       isLaunched = true
@@ -138,86 +141,17 @@ const launch = () => {
     }, 3000);
   })
 }
-// This function will output the lines from the script 
-// and will return the full combined output
-// as well as exit code when it's done (using the callback).
-let result = '';
-async function run_script(command, args, callback) {
-  let child = child_process.exec(command, { 'shell': 'powershell.exe' })
-  // You can also use a variable to save the output for when the script closes later
-  child.on('error', (error) => {
-    dialog.showMessageBox({
-      title: 'Title',
-      type: 'warning',
-      message: 'Error occurred.\r\n' + error
-    });
-  });
-
-  child.stdout.setEncoding('utf8');
-  child.stdout.on('data', (data) => {
-    //Here is the output
-    data = data.toString();
-    console.log(data);
-    result = data;
-  });
-
-  child.stderr.setEncoding('utf8');
-  child.stderr.on('data', (data) => {
-    // Return some data to the renderer process with the mainprocess-response ID
-    // mainWindow.webContents.send('mainprocess-response', data);
-    //Here is the output from the command
-    console.log("error data:", data);
-    result = data;
-  });
-
-  child.on('close', (code) => {
-    //Here you can get the exit code of the script  
-    switch (code) {
-      case 0:
-        dialog.showMessageBox({
-          title: result,
-          type: 'info',
-          message: 'End process.\r\n'
-        });
-        break;
-    }
-
-  });
-  if (typeof callback === 'function')
-    callback();
-}
 
 
-/** Approach 1 */
-const PORT = 3000;
-function checkPortStatus() {
-  const client = net.connect(PORT, '0.0.0.0');
 
-  client.on('connect', () => {
-    console.log(`Port ${PORT} is active`);
-    logToFile(`Port ${PORT} is active`);
-    client.end();
-  });
-
-  client.on('error', async (err) => {
-    if (err.code === 'ECONNREFUSED') {
-      console.log(`Port ${PORT} is not active`);
-      logToFile(`Port ${PORT} is not active`);
-      // await launch();
-      mainWindow.reload();
-    } else {
-      console.error(`Error occurred while checking port ${PORT}:`, err);
-    }
-  });
-}
-
-// Call the function immediately
-// checkPortStatus();
-
-// // Call the function every 10 seconds
+// Call the function every 10 seconds
 setInterval(checkPortStatus, 10000);
 
 /**Approach 2 */
 // setInterval(() => {
-//   run_script('./server-start.bat')
+//   runScript('./server-start.bat')
 // }, 10000);
+
+module.exports = {
+  launch
+}
