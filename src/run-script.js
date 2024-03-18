@@ -30,7 +30,7 @@ async function runScript(command, args, callback) {
     // Return some data to the renderer process with the mainprocess-response ID
     // mainWindow.webContents.send('mainprocess-response', data);
     //Here is the output from the command
-    // logToFile('stderr: ', JSON.stringify(data));
+    logToFile('stderr: ', JSON.stringify(data));
     console.log("error data:", data);
     result = data;
   });
