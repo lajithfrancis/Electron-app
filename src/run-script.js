@@ -1,5 +1,6 @@
 const child_process = require('child_process');
 const { dialog } = require('electron');
+const { logToFile } = require('./log');
 
 // This function will output the lines from the script 
 // and will return the full combined output
@@ -20,7 +21,7 @@ async function runScript(command, args, callback) {
   child.stdout.on('data', (data) => {
     //Here is the output
     data = data.toString();
-    console.log(data);
+    logToFile('stdout: ', JSON.stringify(data));
     result = data;
   });
 
@@ -29,6 +30,7 @@ async function runScript(command, args, callback) {
     // Return some data to the renderer process with the mainprocess-response ID
     // mainWindow.webContents.send('mainprocess-response', data);
     //Here is the output from the command
+    // logToFile('stderr: ', JSON.stringify(data));
     console.log("error data:", data);
     result = data;
   });
@@ -37,17 +39,17 @@ async function runScript(command, args, callback) {
     //Here you can get the exit code of the script  
     switch (code) {
       case 0:
-        dialog.showMessageBox({
-          title: result,
-          type: 'info',
-          message: 'End process.\r\n'
-        });
+        // dialog.showMessageBox({
+        //   title: result,
+        //   type: 'info',
+        //   message: 'End process.\r\n'
+        // });
+        if (typeof callback === 'function')
+          callback();
         break;
     }
 
   });
-  if (typeof callback === 'function')
-    callback();
 }
 
 module.exports = {

@@ -3,17 +3,19 @@ const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const { homedir } = require('os');
-console.log("app.getAppPath(): ", app.getAppPath())
 const AutoLaunch = require('auto-launch');
-const { checkPortStatus } = require('./check-port-status');
-const { runScript } = require('./run-script');
-const { logToFile } = require('./log');
+const { checkPortStatus } = require('./src/check-port-status');
+const { runScript } = require('./src/run-script');
+const { logToFile } = require('./src/log');
+const { launch } = require('./src/launch');
 const autoLauncher = new AutoLaunch({
   name: 'My Electron App Setup 1.0.0',
   isHidden: true
 });
 
 autoLauncher.enable();
+console.log("app.getAppPath(): ", app.getAppPath());
+logToFile(`app.getAppPath(): ${app.getAppPath()}`);
 
 let mainWindow;
 const dbName = '/mydb.db';
@@ -35,10 +37,10 @@ async function createWindow() {
   });
 
   await launch();
-
   // Load your application URL.
   //   mainWindow.loadURL('https://vendor-portal.prodigymarinesolutions.com/en/login');
   mainWindow.loadURL('http://localhost:3000/en/');
+
 
   mainWindow.on('closed', async function () {
     await killPort()
@@ -66,9 +68,7 @@ app.on('before-quit', async function (e) {
   // }
 });
 
-app.on('ready', async () => {
-  createWindow();
-});
+app.on('ready', createWindow);
 
 app.on('window-all-closed', async function () {
   await killPort()
@@ -84,11 +84,10 @@ app.on('activate', function () {
   }
 });
 
-let isLaunched = false;
 
 const killPort = () => {
   return new Promise((resolve) => {
-    runScript(`${app.getAppPath()}/kill-port.bat`)
+    runScript(`./kill-port.bat`)
     setTimeout(() => {
       resolve(true)
       isLaunched = false;
@@ -96,62 +95,10 @@ const killPort = () => {
   })
 }
 
-const launch = () => {
-  return new Promise((resolve) => {
-    // let interval = setInterval(() => {
-    //   if (!isLaunched) {
-    //     runScript(`cd standalone ; node server.js`, null, null);
-    //     setTimeout(() => {
-    //       resolve(true)
-    //       isLaunched = true
-    //       logToFile('resolved the launch')
-    //     }, 3000);
-    //   } else {
-    //     clearInterval(interval)
-    //     interval.unref()
-    //     logToFile('isLaunched and unref timer')
-    //   }
-    // }, 10_000);
-
-    // runScript(`cd standalone ; node server.js`, null, null);
-    // let child = child_process.spawn('./startup-server.bat', { 'shell': 'powershell.exe' })
-
-    let child = child_process.spawn('powershell.exe', [
-      `${app.getAppPath()}/startup-server.bat`
-    ])
-    child.stdout.on("data", function (data) {
-      console.log("Powershell Data: " + data);
-      logToFile("Powershell Data: " + data);
-      mainWindow.reload();
-    });
-    child.stderr.on("data", function (data) {
-      console.log("Powershell Errors: " + data);
-      logToFile("Powershell Errors: " + data);
-    });
-    child.on("exit", function () {
-      console.log("Powershell Script finished");
-      logToFile("Powershell Script finished");
-      mainWindow.reload();
-    });
-    child.stdin.end();
-    setTimeout(() => {
-      resolve(true)
-      isLaunched = true
-      logToFile('resolved the launch')
-    }, 3000);
-  })
+const reload = () => {
+  mainWindow.reload();
+  logToFile('reloaded window');
 }
-
-
 
 // Call the function every 10 seconds
-setInterval(checkPortStatus, 10000);
-
-/**Approach 2 */
-// setInterval(() => {
-//   runScript('./server-start.bat')
-// }, 10000);
-
-module.exports = {
-  launch
-}
+setInterval(() => checkPortStatus(reload), 10000);

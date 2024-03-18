@@ -19,8 +19,8 @@
     },
     "extraFiles": [
       "standalone",
-      "startup-server.bat",
-      "kill-port.bat"
+      "kill-port.bat",
+      "startup-server.bat"
     ],
     "mac": {
       "target": "dmg"
