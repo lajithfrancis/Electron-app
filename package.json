@@ -18,7 +18,9 @@
       "output": "output"
     },
     "extraFiles": [
-      "standalone"
+      "standalone",
+      "startup-server.bat",
+      "kill-port.bat"
     ],
     "mac": {
       "target": "dmg"
@@ -35,6 +37,7 @@
     "electron-builder": "^22.11.7"
   },
   "dependencies": {
+    "auto-launch": "^5.0.6",
     "dotenv": "^16.4.5"
   }
 }
