@@ -1,20 +1,17 @@
 let { app, BrowserWindow } = require('electron');
-const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const { homedir } = require('os');
-const AutoLaunch = require('auto-launch');
-const { checkPortStatus } = require('./src/check-port-status');
-const { runScript } = require('./src/run-script');
+
 const { logToFile } = require('./src/log');
 const { launch } = require('./src/launch');
 const { killPortProcess } = require('kill-port-process');
-const autoLauncher = new AutoLaunch({
-  name: 'My Electron App Setup 1.0.0'
-});
 
-autoLauncher.enable();
-console.log("app.getAppPath(): ", app.getAppPath());
+app.setLoginItemSettings({
+  name: 'My Electron App Setup 1.0.0',
+  openAsHidden: true
+})
+
 logToFile(`app.getAppPath(): ${app.getAppPath()}`);
 
 let mainWindow;
@@ -43,30 +40,15 @@ async function createWindow() {
 
 
   mainWindow.on('closed', async function () {
-    await killPort()
-    console.log('script run for launch.bat in closed')
-    logToFile('script run for launch.bat in closed')
+    await killPort();
     mainWindow = null;
   });
 
   mainWindow.on('close', async function () {
-    await killPort()
-    console.log('script run for launch.bat in close')
-    logToFile('script run for launch.bat in close')
+    await killPort();
   })
 
 }
-
-// You can use 'before-quit' instead of (or with) the close event
-app.on('before-quit', async function (e) {
-  await killPort()
-  console.log('script run for launch.bat in before-quit')
-  // Handle menu-item or keyboard shortcut quit here
-  // if(!force_quit){
-  //     e.preventDefault();
-  //     mainWindow.hide();
-  // }
-});
 
 app.on('ready', createWindow);
 
@@ -110,4 +92,4 @@ const reload = () => {
 }
 
 // Call the function every 10 seconds
-setInterval(() => checkPortStatus(reload), 10000);
+// setInterval(() => checkPortStatus(reload), 10000);

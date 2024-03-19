@@ -3,7 +3,6 @@ const net = require("net");
 const { logToFile } = require("./log");
 const { launch } = require("./launch");
 
-/** Approach 1 */
 const PORT = 3000;
 function checkPortStatus(reload) {
   const client = net.connect(PORT, '0.0.0.0');
