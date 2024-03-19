@@ -1,7 +1,23 @@
 // runtime can't be in strict mode because a global variable is assign and maybe created.
 (self["webpackChunk_N_E"] = self["webpackChunk_N_E"] || []).push([[727],{
 
-/***/ 101:
+/***/ 67:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:async_hooks");
+
+/***/ }),
+
+/***/ 195:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:buffer");
+
+/***/ }),
+
+/***/ 467:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -726,7 +742,7 @@ class NextURL {
 } //# sourceMappingURL=next-url.js.map
 
 // EXTERNAL MODULE: ./node_modules/next/dist/compiled/@edge-runtime/cookies/index.js
-var _edge_runtime_cookies = __webpack_require__(492);
+var _edge_runtime_cookies = __webpack_require__(283);
 ;// CONCATENATED MODULE: ./node_modules/next/dist/esm/server/web/spec-extension/cookies.js
  //# sourceMappingURL=cookies.js.map
 
@@ -932,10 +948,11 @@ const FLIGHT_PARAMETERS = [
         NEXT_ROUTER_PREFETCH_HEADER
     ]
 ];
-const NEXT_RSC_UNION_QUERY = "_rsc"; //# sourceMappingURL=app-router-headers.js.map
+const NEXT_RSC_UNION_QUERY = "_rsc";
+const NEXT_DID_POSTPONE_HEADER = "x-nextjs-postponed"; //# sourceMappingURL=app-router-headers.js.map
 
 // EXTERNAL MODULE: ./node_modules/next/dist/esm/shared/lib/modern-browserslist-target.js
-var modern_browserslist_target = __webpack_require__(459);
+var modern_browserslist_target = __webpack_require__(253);
 ;// CONCATENATED MODULE: ./node_modules/next/dist/esm/shared/lib/constants.js
 
 
@@ -1024,11 +1041,8 @@ const CLIENT_STATIC_FILES_RUNTIME_WEBPACK = "webpack";
 const CLIENT_STATIC_FILES_RUNTIME_POLYFILLS = "polyfills";
 const CLIENT_STATIC_FILES_RUNTIME_POLYFILLS_SYMBOL = Symbol(CLIENT_STATIC_FILES_RUNTIME_POLYFILLS);
 const EDGE_RUNTIME_WEBPACK = "edge-runtime-webpack";
-const TEMPORARY_REDIRECT_STATUS = 307;
-const PERMANENT_REDIRECT_STATUS = 308;
 const STATIC_PROPS_ID = "__N_SSG";
 const SERVER_PROPS_ID = "__N_SSP";
-const PAGE_SEGMENT_KEY = "__PAGE__";
 const GOOGLE_FONT_PROVIDER = "https://fonts.googleapis.com/";
 const OPTIMIZED_FONT_PROVIDERS = [
     {
@@ -1186,7 +1200,6 @@ function stripInternalSearchParams(url, isEdge) {
 const NEXT_QUERY_PARAM_PREFIX = "nxtP";
 const PRERENDER_REVALIDATE_HEADER = "x-prerender-revalidate";
 const PRERENDER_REVALIDATE_ONLY_GENERATED_HEADER = "x-prerender-revalidate-if-generated";
-const NEXT_DID_POSTPONE_HEADER = "x-nextjs-postponed";
 const RSC_PREFETCH_SUFFIX = ".prefetch.rsc";
 const RSC_SUFFIX = ".rsc";
 const NEXT_DATA_SUFFIX = ".json";
@@ -1315,7 +1328,8 @@ const WEBPACK_LAYERS = {
             WEBPACK_LAYERS_NAMES.appMetadataRoute,
             WEBPACK_LAYERS_NAMES.appRouteHandler,
             WEBPACK_LAYERS_NAMES.serverSideRendering,
-            WEBPACK_LAYERS_NAMES.appPagesBrowser
+            WEBPACK_LAYERS_NAMES.appPagesBrowser,
+            WEBPACK_LAYERS_NAMES.shared
         ]
     }
 };
@@ -1578,9 +1592,9 @@ function appendMutableCookies(headers, mutableCookies) {
 }
 class MutableRequestCookiesAdapter {
     static wrap(cookies, onUpdateCookies) {
-        const responseCookes = new _edge_runtime_cookies.ResponseCookies(new Headers());
+        const responseCookies = new _edge_runtime_cookies.ResponseCookies(new Headers());
         for (const cookie of cookies.getAll()){
-            responseCookes.set(cookie);
+            responseCookies.set(cookie);
         }
         let modifiedValues = [];
         const modifiedCookies = new Set();
@@ -1591,7 +1605,7 @@ class MutableRequestCookiesAdapter {
             if (staticGenerationAsyncStore) {
                 staticGenerationAsyncStore.pathWasRevalidated = true;
             }
-            const allCookies = responseCookes.getAll();
+            const allCookies = responseCookies.getAll();
             modifiedValues = allCookies.filter((c)=>modifiedCookies.has(c.name));
             if (onUpdateCookies) {
                 const serializedCookies = [];
@@ -1603,7 +1617,7 @@ class MutableRequestCookiesAdapter {
                 onUpdateCookies(serializedCookies);
             }
         };
-        return new Proxy(responseCookes, {
+        return new Proxy(responseCookies, {
             get (target, prop, receiver) {
                 switch(prop){
                     // A special symbol to get the modified cookie values
@@ -1687,7 +1701,7 @@ function clearPreviewData(res, options = {}) {
     if (SYMBOL_CLEARED_COOKIES in res) {
         return res;
     }
-    const { serialize } = __webpack_require__(842);
+    const { serialize } = __webpack_require__(578);
     const previous = res.getHeader("Set-Cookie");
     res.setHeader(`Set-Cookie`, [
         ...typeof previous === "string" ? [
@@ -1928,7 +1942,301 @@ function createAsyncLocalStorage() {
 
 const requestAsyncStorage = createAsyncLocalStorage(); //# sourceMappingURL=request-async-storage.external.js.map
 
+;// CONCATENATED MODULE: ./node_modules/next/dist/esm/server/lib/trace/constants.js
+/**
+ * Contains predefined constants for the trace span name in next/server.
+ *
+ * Currently, next/server/tracer is internal implementation only for tracking
+ * next.js's implementation only with known span names defined here.
+ **/ // eslint typescript has a bug with TS enums
+/* eslint-disable no-shadow */ var BaseServerSpan;
+(function(BaseServerSpan) {
+    BaseServerSpan["handleRequest"] = "BaseServer.handleRequest";
+    BaseServerSpan["run"] = "BaseServer.run";
+    BaseServerSpan["pipe"] = "BaseServer.pipe";
+    BaseServerSpan["getStaticHTML"] = "BaseServer.getStaticHTML";
+    BaseServerSpan["render"] = "BaseServer.render";
+    BaseServerSpan["renderToResponseWithComponents"] = "BaseServer.renderToResponseWithComponents";
+    BaseServerSpan["renderToResponse"] = "BaseServer.renderToResponse";
+    BaseServerSpan["renderToHTML"] = "BaseServer.renderToHTML";
+    BaseServerSpan["renderError"] = "BaseServer.renderError";
+    BaseServerSpan["renderErrorToResponse"] = "BaseServer.renderErrorToResponse";
+    BaseServerSpan["renderErrorToHTML"] = "BaseServer.renderErrorToHTML";
+    BaseServerSpan["render404"] = "BaseServer.render404";
+})(BaseServerSpan || (BaseServerSpan = {}));
+var LoadComponentsSpan;
+(function(LoadComponentsSpan) {
+    LoadComponentsSpan["loadDefaultErrorComponents"] = "LoadComponents.loadDefaultErrorComponents";
+    LoadComponentsSpan["loadComponents"] = "LoadComponents.loadComponents";
+})(LoadComponentsSpan || (LoadComponentsSpan = {}));
+var NextServerSpan;
+(function(NextServerSpan) {
+    NextServerSpan["getRequestHandler"] = "NextServer.getRequestHandler";
+    NextServerSpan["getServer"] = "NextServer.getServer";
+    NextServerSpan["getServerRequestHandler"] = "NextServer.getServerRequestHandler";
+    NextServerSpan["createServer"] = "createServer.createServer";
+})(NextServerSpan || (NextServerSpan = {}));
+var NextNodeServerSpan;
+(function(NextNodeServerSpan) {
+    NextNodeServerSpan["compression"] = "NextNodeServer.compression";
+    NextNodeServerSpan["getBuildId"] = "NextNodeServer.getBuildId";
+    NextNodeServerSpan["getLayoutOrPageModule"] = "NextNodeServer.getLayoutOrPageModule";
+    NextNodeServerSpan["generateStaticRoutes"] = "NextNodeServer.generateStaticRoutes";
+    NextNodeServerSpan["generateFsStaticRoutes"] = "NextNodeServer.generateFsStaticRoutes";
+    NextNodeServerSpan["generatePublicRoutes"] = "NextNodeServer.generatePublicRoutes";
+    NextNodeServerSpan["generateImageRoutes"] = "NextNodeServer.generateImageRoutes.route";
+    NextNodeServerSpan["sendRenderResult"] = "NextNodeServer.sendRenderResult";
+    NextNodeServerSpan["proxyRequest"] = "NextNodeServer.proxyRequest";
+    NextNodeServerSpan["runApi"] = "NextNodeServer.runApi";
+    NextNodeServerSpan["render"] = "NextNodeServer.render";
+    NextNodeServerSpan["renderHTML"] = "NextNodeServer.renderHTML";
+    NextNodeServerSpan["imageOptimizer"] = "NextNodeServer.imageOptimizer";
+    NextNodeServerSpan["getPagePath"] = "NextNodeServer.getPagePath";
+    NextNodeServerSpan["getRoutesManifest"] = "NextNodeServer.getRoutesManifest";
+    NextNodeServerSpan["findPageComponents"] = "NextNodeServer.findPageComponents";
+    NextNodeServerSpan["getFontManifest"] = "NextNodeServer.getFontManifest";
+    NextNodeServerSpan["getServerComponentManifest"] = "NextNodeServer.getServerComponentManifest";
+    NextNodeServerSpan["getRequestHandler"] = "NextNodeServer.getRequestHandler";
+    NextNodeServerSpan["renderToHTML"] = "NextNodeServer.renderToHTML";
+    NextNodeServerSpan["renderError"] = "NextNodeServer.renderError";
+    NextNodeServerSpan["renderErrorToHTML"] = "NextNodeServer.renderErrorToHTML";
+    NextNodeServerSpan["render404"] = "NextNodeServer.render404";
+    NextNodeServerSpan["route"] = "route";
+    NextNodeServerSpan["onProxyReq"] = "onProxyReq";
+    NextNodeServerSpan["apiResolver"] = "apiResolver";
+    NextNodeServerSpan["internalFetch"] = "internalFetch";
+})(NextNodeServerSpan || (NextNodeServerSpan = {}));
+var StartServerSpan;
+(function(StartServerSpan) {
+    StartServerSpan["startServer"] = "startServer.startServer";
+})(StartServerSpan || (StartServerSpan = {}));
+var RenderSpan;
+(function(RenderSpan) {
+    RenderSpan["getServerSideProps"] = "Render.getServerSideProps";
+    RenderSpan["getStaticProps"] = "Render.getStaticProps";
+    RenderSpan["renderToString"] = "Render.renderToString";
+    RenderSpan["renderDocument"] = "Render.renderDocument";
+    RenderSpan["createBodyResult"] = "Render.createBodyResult";
+})(RenderSpan || (RenderSpan = {}));
+var AppRenderSpan;
+(function(AppRenderSpan) {
+    AppRenderSpan["renderToString"] = "AppRender.renderToString";
+    AppRenderSpan["renderToReadableStream"] = "AppRender.renderToReadableStream";
+    AppRenderSpan["getBodyResult"] = "AppRender.getBodyResult";
+    AppRenderSpan["fetch"] = "AppRender.fetch";
+})(AppRenderSpan || (AppRenderSpan = {}));
+var RouterSpan;
+(function(RouterSpan) {
+    RouterSpan["executeRoute"] = "Router.executeRoute";
+})(RouterSpan || (RouterSpan = {}));
+var NodeSpan;
+(function(NodeSpan) {
+    NodeSpan["runHandler"] = "Node.runHandler";
+})(NodeSpan || (NodeSpan = {}));
+var AppRouteRouteHandlersSpan;
+(function(AppRouteRouteHandlersSpan) {
+    AppRouteRouteHandlersSpan["runHandler"] = "AppRouteRouteHandlers.runHandler";
+})(AppRouteRouteHandlersSpan || (AppRouteRouteHandlersSpan = {}));
+var ResolveMetadataSpan;
+(function(ResolveMetadataSpan) {
+    ResolveMetadataSpan["generateMetadata"] = "ResolveMetadata.generateMetadata";
+    ResolveMetadataSpan["generateViewport"] = "ResolveMetadata.generateViewport";
+})(ResolveMetadataSpan || (ResolveMetadataSpan = {}));
+// This list is used to filter out spans that are not relevant to the user
+const NextVanillaSpanAllowlist = [
+    "BaseServer.handleRequest",
+    "Render.getServerSideProps",
+    "Render.getStaticProps",
+    "AppRender.fetch",
+    "AppRender.getBodyResult",
+    "Render.renderDocument",
+    "Node.runHandler",
+    "AppRouteRouteHandlers.runHandler",
+    "ResolveMetadata.generateMetadata",
+    "ResolveMetadata.generateViewport",
+    "NextNodeServer.findPageComponents",
+    "NextNodeServer.getLayoutOrPageModule"
+];
+ //# sourceMappingURL=constants.js.map
+
+;// CONCATENATED MODULE: ./node_modules/next/dist/esm/server/lib/trace/tracer.js
+
+let api;
+// we want to allow users to use their own version of @opentelemetry/api if they
+// want to, so we try to require it first, and if it fails we fall back to the
+// version that is bundled with Next.js
+// this is because @opentelemetry/api has to be synced with the version of
+// @opentelemetry/tracing that is used, and we don't want to force users to use
+// the version that is bundled with Next.js.
+// the API is ~stable, so this should be fine
+if (true) {
+    api = __webpack_require__(38);
+} else {}
+const { context, propagation, trace, SpanStatusCode, SpanKind, ROOT_CONTEXT } = api;
+const isPromise = (p)=>{
+    return p !== null && typeof p === "object" && typeof p.then === "function";
+};
+const closeSpanWithError = (span, error)=>{
+    if ((error == null ? void 0 : error.bubble) === true) {
+        span.setAttribute("next.bubble", true);
+    } else {
+        if (error) {
+            span.recordException(error);
+        }
+        span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: error == null ? void 0 : error.message
+        });
+    }
+    span.end();
+};
+/** we use this map to propagate attributes from nested spans to the top span */ const rootSpanAttributesStore = new Map();
+const rootSpanIdKey = api.createContextKey("next.rootSpanId");
+let lastSpanId = 0;
+const getSpanId = ()=>lastSpanId++;
+class NextTracerImpl {
+    /**
+   * Returns an instance to the trace with configured name.
+   * Since wrap / trace can be defined in any place prior to actual trace subscriber initialization,
+   * This should be lazily evaluated.
+   */ getTracerInstance() {
+        return trace.getTracer("next.js", "0.0.1");
+    }
+    getContext() {
+        return context;
+    }
+    getActiveScopeSpan() {
+        return trace.getSpan(context == null ? void 0 : context.active());
+    }
+    withPropagatedContext(carrier, fn, getter) {
+        const activeContext = context.active();
+        if (trace.getSpanContext(activeContext)) {
+            // Active span is already set, too late to propagate.
+            return fn();
+        }
+        const remoteContext = propagation.extract(activeContext, carrier, getter);
+        return context.with(remoteContext, fn);
+    }
+    trace(...args) {
+        var _trace_getSpanContext;
+        const [type, fnOrOptions, fnOrEmpty] = args;
+        // coerce options form overload
+        const { fn, options } = typeof fnOrOptions === "function" ? {
+            fn: fnOrOptions,
+            options: {}
+        } : {
+            fn: fnOrEmpty,
+            options: {
+                ...fnOrOptions
+            }
+        };
+        if (!NextVanillaSpanAllowlist.includes(type) && process.env.NEXT_OTEL_VERBOSE !== "1" || options.hideSpan) {
+            return fn();
+        }
+        const spanName = options.spanName ?? type;
+        // Trying to get active scoped span to assign parent. If option specifies parent span manually, will try to use it.
+        let spanContext = this.getSpanContext((options == null ? void 0 : options.parentSpan) ?? this.getActiveScopeSpan());
+        let isRootSpan = false;
+        if (!spanContext) {
+            spanContext = ROOT_CONTEXT;
+            isRootSpan = true;
+        } else if ((_trace_getSpanContext = trace.getSpanContext(spanContext)) == null ? void 0 : _trace_getSpanContext.isRemote) {
+            isRootSpan = true;
+        }
+        const spanId = getSpanId();
+        options.attributes = {
+            "next.span_name": spanName,
+            "next.span_type": type,
+            ...options.attributes
+        };
+        return context.with(spanContext.setValue(rootSpanIdKey, spanId), ()=>this.getTracerInstance().startActiveSpan(spanName, options, (span)=>{
+                const onCleanup = ()=>{
+                    rootSpanAttributesStore.delete(spanId);
+                };
+                if (isRootSpan) {
+                    rootSpanAttributesStore.set(spanId, new Map(Object.entries(options.attributes ?? {})));
+                }
+                try {
+                    if (fn.length > 1) {
+                        return fn(span, (err)=>closeSpanWithError(span, err));
+                    }
+                    const result = fn(span);
+                    if (isPromise(result)) {
+                        // If there's error make sure it throws
+                        return result.then((res)=>{
+                            span.end();
+                            // Need to pass down the promise result,
+                            // it could be react stream response with error { error, stream }
+                            return res;
+                        }).catch((err)=>{
+                            closeSpanWithError(span, err);
+                            throw err;
+                        }).finally(onCleanup);
+                    } else {
+                        span.end();
+                        onCleanup();
+                    }
+                    return result;
+                } catch (err) {
+                    closeSpanWithError(span, err);
+                    onCleanup();
+                    throw err;
+                }
+            }));
+    }
+    wrap(...args) {
+        const tracer = this;
+        const [name, options, fn] = args.length === 3 ? args : [
+            args[0],
+            {},
+            args[1]
+        ];
+        if (!NextVanillaSpanAllowlist.includes(name) && process.env.NEXT_OTEL_VERBOSE !== "1") {
+            return fn;
+        }
+        return function() {
+            let optionsObj = options;
+            if (typeof optionsObj === "function" && typeof fn === "function") {
+                optionsObj = optionsObj.apply(this, arguments);
+            }
+            const lastArgId = arguments.length - 1;
+            const cb = arguments[lastArgId];
+            if (typeof cb === "function") {
+                const scopeBoundCb = tracer.getContext().bind(context.active(), cb);
+                return tracer.trace(name, optionsObj, (_span, done)=>{
+                    arguments[lastArgId] = function(err) {
+                        done == null ? void 0 : done(err);
+                        return scopeBoundCb.apply(this, arguments);
+                    };
+                    return fn.apply(this, arguments);
+                });
+            } else {
+                return tracer.trace(name, optionsObj, ()=>fn.apply(this, arguments));
+            }
+        };
+    }
+    startSpan(...args) {
+        const [type, options] = args;
+        const spanContext = this.getSpanContext((options == null ? void 0 : options.parentSpan) ?? this.getActiveScopeSpan());
+        return this.getTracerInstance().startSpan(type, options, spanContext);
+    }
+    getSpanContext(parentSpan) {
+        const spanContext = parentSpan ? trace.setSpan(context.active(), parentSpan) : undefined;
+        return spanContext;
+    }
+    getRootSpanAttributes() {
+        const spanId = context.active().getValue(rootSpanIdKey);
+        return rootSpanAttributesStore.get(spanId);
+    }
+}
+const getTracer = (()=>{
+    const tracer = new NextTracerImpl();
+    return ()=>tracer;
+})();
+ //# sourceMappingURL=tracer.js.map
+
 ;// CONCATENATED MODULE: ./node_modules/next/dist/esm/server/web/adapter.js
+
 
 
 
@@ -1965,7 +2273,27 @@ class NextRequestHint extends NextRequest {
         });
     }
 }
+const headersGetter = {
+    keys: (headers)=>Array.from(headers.keys()),
+    get: (headers, key)=>headers.get(key) ?? undefined
+};
+let propagator = (request, fn)=>{
+    const tracer = getTracer();
+    return tracer.withPropagatedContext(request.headers, fn, headersGetter);
+};
+let testApisIntercepted = false;
+function ensureTestApisIntercepted() {
+    if (!testApisIntercepted) {
+        testApisIntercepted = true;
+        if (process.env.NEXT_PRIVATE_TEST_PROXY === "true") {
+            const { interceptTestApis, wrapRequestHandler } = __webpack_require__(895);
+            interceptTestApis();
+            propagator = wrapRequestHandler(propagator);
+        }
+    }
+}
 async function adapter(params) {
+    ensureTestApisIntercepted();
     await ensureInstrumentationRegistered();
     // TODO-APP: use explicit marker for this
     const isEdgeRendering = typeof self.__BUILD_MANIFEST !== "undefined";
@@ -2064,26 +2392,27 @@ async function adapter(params) {
     });
     let response;
     let cookiesFromResponse;
-    // we only care to make async storage available for middleware
-    const isMiddleware = params.page === "/middleware" || params.page === "/src/middleware";
-    if (isMiddleware) {
-        response = await RequestAsyncStorageWrapper.wrap(requestAsyncStorage, {
-            req: request,
-            renderOpts: {
-                onUpdateCookies: (cookies)=>{
-                    cookiesFromResponse = cookies;
-                },
-                // @ts-expect-error: TODO: investigate why previewProps isn't on RenderOpts
-                previewProps: (prerenderManifest == null ? void 0 : prerenderManifest.preview) || {
-                    previewModeId: "development-id",
-                    previewModeEncryptionKey: "",
-                    previewModeSigningKey: ""
+    response = await propagator(request, ()=>{
+        // we only care to make async storage available for middleware
+        const isMiddleware = params.page === "/middleware" || params.page === "/src/middleware";
+        if (isMiddleware) {
+            return RequestAsyncStorageWrapper.wrap(requestAsyncStorage, {
+                req: request,
+                renderOpts: {
+                    onUpdateCookies: (cookies)=>{
+                        cookiesFromResponse = cookies;
+                    },
+                    // @ts-expect-error: TODO: investigate why previewProps isn't on RenderOpts
+                    previewProps: (prerenderManifest == null ? void 0 : prerenderManifest.preview) || {
+                        previewModeId: "development-id",
+                        previewModeEncryptionKey: "",
+                        previewModeSigningKey: ""
+                    }
                 }
-            }
-        }, ()=>params.handler(request, event));
-    } else {
-        response = await params.handler(request, event);
-    }
+            }, ()=>params.handler(request, event));
+        }
+        return params.handler(request, event);
+    });
     // check if response is a Response object
     if (response && !(response instanceof Response)) {
         throw new TypeError("Expected an instance of Response to be returned");
@@ -2176,7 +2505,7 @@ async function adapter(params) {
  //# sourceMappingURL=next-response.js.map
 
 // EXTERNAL MODULE: ./node_modules/accept-language/Build/Source/AcceptLanguage.js
-var AcceptLanguage = __webpack_require__(466);
+var AcceptLanguage = __webpack_require__(869);
 var AcceptLanguage_default = /*#__PURE__*/__webpack_require__.n(AcceptLanguage);
 ;// CONCATENATED MODULE: ./src/i18n/settings.ts
 const fallbackLng = "en";
@@ -2210,6 +2539,17 @@ const config = {
     ]
 };
 function middleware(req) {
+    // If user is not auth and not going to the login page, redirect to login page
+    // TODO extract protected and auth routes into constants
+    // if (
+    //   !req.cookies.has("user") &&
+    //   !req.nextUrl.pathname.startsWith("/en/login")
+    // ) {
+    //   return NextResponse.redirect(new URL("/en/login", req.url));
+    // }
+    // if (req.cookies.has("user") && req.nextUrl.pathname.startsWith("/en/login")) {
+    //   return NextResponse.redirect(new URL("/quote-requests", req.url));
+    // }
     let lng;
     if (req.cookies.has(cookieName)) lng = AcceptLanguage_default().get(req.cookies.get(cookieName)?.value);
     if (!lng) lng = AcceptLanguage_default().get(req.headers.get("Accept-Language"));
@@ -2228,7 +2568,7 @@ function middleware(req) {
     return NextResponse.next();
 }
 
-;// CONCATENATED MODULE: ./node_modules/next/dist/build/webpack/loaders/next-middleware-loader.js?absolutePagePath=private-next-root-dir%2Fsrc%2Fmiddleware.ts&page=%2Fsrc%2Fmiddleware&rootDir=D%3A%5CProjects%5Capp-p2p-office-web&matchers=W3sicmVnZXhwIjoiXig%2FOlxcLyhfbmV4dFxcL2RhdGFcXC9bXi9dezEsfSkpPyg%2FOlxcLygoPyFhcGl8X25leHRcXC9zdGF0aWN8X25leHRcXC9pbWFnZXxkb2N1bWVudHN8aW1hZ2VzfGFzc2V0c3xmYXZpY29uLmljb3xzdy5qcykuKikpKC5qc29uKT9bXFwvI1xcP10%2FJCIsIm9yaWdpbmFsU291cmNlIjoiLygoPyFhcGl8X25leHQvc3RhdGljfF9uZXh0L2ltYWdlfGRvY3VtZW50c3xpbWFnZXN8YXNzZXRzfGZhdmljb24uaWNvfHN3LmpzKS4qKSJ9XQ%3D%3D&preferredRegion=&middlewareConfig=eyJtYXRjaGVycyI6W3sicmVnZXhwIjoiXig%2FOlxcLyhfbmV4dFxcL2RhdGFcXC9bXi9dezEsfSkpPyg%2FOlxcLygoPyFhcGl8X25leHRcXC9zdGF0aWN8X25leHRcXC9pbWFnZXxkb2N1bWVudHN8aW1hZ2VzfGFzc2V0c3xmYXZpY29uLmljb3xzdy5qcykuKikpKC5qc29uKT9bXFwvI1xcP10%2FJCIsIm9yaWdpbmFsU291cmNlIjoiLygoPyFhcGl8X25leHQvc3RhdGljfF9uZXh0L2ltYWdlfGRvY3VtZW50c3xpbWFnZXN8YXNzZXRzfGZhdmljb24uaWNvfHN3LmpzKS4qKSJ9XX0%3D!
+;// CONCATENATED MODULE: ./node_modules/next/dist/build/webpack/loaders/next-middleware-loader.js?absolutePagePath=private-next-root-dir%2Fsrc%2Fmiddleware.ts&page=%2Fsrc%2Fmiddleware&rootDir=D%3A%5CProjects%5Capp-market-place-web&matchers=W3sicmVnZXhwIjoiXig%2FOlxcLyhfbmV4dFxcL2RhdGFcXC9bXi9dezEsfSkpPyg%2FOlxcLygoPyFhcGl8X25leHRcXC9zdGF0aWN8X25leHRcXC9pbWFnZXxkb2N1bWVudHN8aW1hZ2VzfGFzc2V0c3xmYXZpY29uLmljb3xzdy5qcykuKikpKC5qc29uKT9bXFwvI1xcP10%2FJCIsIm9yaWdpbmFsU291cmNlIjoiLygoPyFhcGl8X25leHQvc3RhdGljfF9uZXh0L2ltYWdlfGRvY3VtZW50c3xpbWFnZXN8YXNzZXRzfGZhdmljb24uaWNvfHN3LmpzKS4qKSJ9XQ%3D%3D&preferredRegion=&middlewareConfig=eyJtYXRjaGVycyI6W3sicmVnZXhwIjoiXig%2FOlxcLyhfbmV4dFxcL2RhdGFcXC9bXi9dezEsfSkpPyg%2FOlxcLygoPyFhcGl8X25leHRcXC9zdGF0aWN8X25leHRcXC9pbWFnZXxkb2N1bWVudHN8aW1hZ2VzfGFzc2V0c3xmYXZpY29uLmljb3xzdy5qcykuKikpKC5qc29uKT9bXFwvI1xcP10%2FJCIsIm9yaWdpbmFsU291cmNlIjoiLygoPyFhcGl8X25leHQvc3RhdGljfF9uZXh0L2ltYWdlfGRvY3VtZW50c3xpbWFnZXN8YXNzZXRzfGZhdmljb24uaWNvfHN3LmpzKS4qKSJ9XX0%3D!
 
 
 // Import the userland code.
@@ -2253,7 +2593,7 @@ function nHandler(opts) {
 
 /***/ }),
 
-/***/ 466:
+/***/ 869:
 /***/ ((module, exports, __webpack_require__) => {
 
 "use strict";
@@ -2261,8 +2601,8 @@ function nHandler(opts) {
 Object.defineProperty(exports, "__esModule", ({
     value: true
 }));
-var bcp47 = __webpack_require__(911);
-var stable = __webpack_require__(207);
+var bcp47 = __webpack_require__(236);
+var stable = __webpack_require__(483);
 var AcceptLanguage = /** @class */ function() {
     function AcceptLanguage() {
         this.languageTagsWithValues = {};
@@ -2474,7 +2814,7 @@ exports["default"] = create(); //# sourceMappingURL=AcceptLanguage.js.map
 
 /***/ }),
 
-/***/ 911:
+/***/ 236:
 /***/ ((module) => {
 
 "use strict";
@@ -2641,7 +2981,7 @@ module.exports.parse = function(tag) {
 
 /***/ }),
 
-/***/ 492:
+/***/ 283:
 /***/ ((module) => {
 
 "use strict";
@@ -3007,7 +3347,1499 @@ function normalizeCookie(cookie = {
 
 /***/ }),
 
-/***/ 842:
+/***/ 38:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+var __dirname = "/";
+
+(()=>{
+    "use strict";
+    var e = {
+        491: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.ContextAPI = void 0;
+            const n = r(223);
+            const a = r(172);
+            const o = r(930);
+            const i = "context";
+            const c = new n.NoopContextManager;
+            class ContextAPI {
+                constructor(){}
+                static getInstance() {
+                    if (!this._instance) {
+                        this._instance = new ContextAPI;
+                    }
+                    return this._instance;
+                }
+                setGlobalContextManager(e) {
+                    return (0, a.registerGlobal)(i, e, o.DiagAPI.instance());
+                }
+                active() {
+                    return this._getContextManager().active();
+                }
+                with(e, t, r, ...n) {
+                    return this._getContextManager().with(e, t, r, ...n);
+                }
+                bind(e, t) {
+                    return this._getContextManager().bind(e, t);
+                }
+                _getContextManager() {
+                    return (0, a.getGlobal)(i) || c;
+                }
+                disable() {
+                    this._getContextManager().disable();
+                    (0, a.unregisterGlobal)(i, o.DiagAPI.instance());
+                }
+            }
+            t.ContextAPI = ContextAPI;
+        },
+        930: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.DiagAPI = void 0;
+            const n = r(56);
+            const a = r(912);
+            const o = r(957);
+            const i = r(172);
+            const c = "diag";
+            class DiagAPI {
+                constructor(){
+                    function _logProxy(e) {
+                        return function(...t) {
+                            const r = (0, i.getGlobal)("diag");
+                            if (!r) return;
+                            return r[e](...t);
+                        };
+                    }
+                    const e = this;
+                    const setLogger = (t, r = {
+                        logLevel: o.DiagLogLevel.INFO
+                    })=>{
+                        var n, c, s;
+                        if (t === e) {
+                            const t = new Error("Cannot use diag as the logger for itself. Please use a DiagLogger implementation like ConsoleDiagLogger or a custom implementation");
+                            e.error((n = t.stack) !== null && n !== void 0 ? n : t.message);
+                            return false;
+                        }
+                        if (typeof r === "number") {
+                            r = {
+                                logLevel: r
+                            };
+                        }
+                        const u = (0, i.getGlobal)("diag");
+                        const l = (0, a.createLogLevelDiagLogger)((c = r.logLevel) !== null && c !== void 0 ? c : o.DiagLogLevel.INFO, t);
+                        if (u && !r.suppressOverrideMessage) {
+                            const e = (s = (new Error).stack) !== null && s !== void 0 ? s : "<failed to generate stacktrace>";
+                            u.warn(`Current logger will be overwritten from ${e}`);
+                            l.warn(`Current logger will overwrite one already registered from ${e}`);
+                        }
+                        return (0, i.registerGlobal)("diag", l, e, true);
+                    };
+                    e.setLogger = setLogger;
+                    e.disable = ()=>{
+                        (0, i.unregisterGlobal)(c, e);
+                    };
+                    e.createComponentLogger = (e)=>new n.DiagComponentLogger(e);
+                    e.verbose = _logProxy("verbose");
+                    e.debug = _logProxy("debug");
+                    e.info = _logProxy("info");
+                    e.warn = _logProxy("warn");
+                    e.error = _logProxy("error");
+                }
+                static instance() {
+                    if (!this._instance) {
+                        this._instance = new DiagAPI;
+                    }
+                    return this._instance;
+                }
+            }
+            t.DiagAPI = DiagAPI;
+        },
+        653: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.MetricsAPI = void 0;
+            const n = r(660);
+            const a = r(172);
+            const o = r(930);
+            const i = "metrics";
+            class MetricsAPI {
+                constructor(){}
+                static getInstance() {
+                    if (!this._instance) {
+                        this._instance = new MetricsAPI;
+                    }
+                    return this._instance;
+                }
+                setGlobalMeterProvider(e) {
+                    return (0, a.registerGlobal)(i, e, o.DiagAPI.instance());
+                }
+                getMeterProvider() {
+                    return (0, a.getGlobal)(i) || n.NOOP_METER_PROVIDER;
+                }
+                getMeter(e, t, r) {
+                    return this.getMeterProvider().getMeter(e, t, r);
+                }
+                disable() {
+                    (0, a.unregisterGlobal)(i, o.DiagAPI.instance());
+                }
+            }
+            t.MetricsAPI = MetricsAPI;
+        },
+        181: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.PropagationAPI = void 0;
+            const n = r(172);
+            const a = r(874);
+            const o = r(194);
+            const i = r(277);
+            const c = r(369);
+            const s = r(930);
+            const u = "propagation";
+            const l = new a.NoopTextMapPropagator;
+            class PropagationAPI {
+                constructor(){
+                    this.createBaggage = c.createBaggage;
+                    this.getBaggage = i.getBaggage;
+                    this.getActiveBaggage = i.getActiveBaggage;
+                    this.setBaggage = i.setBaggage;
+                    this.deleteBaggage = i.deleteBaggage;
+                }
+                static getInstance() {
+                    if (!this._instance) {
+                        this._instance = new PropagationAPI;
+                    }
+                    return this._instance;
+                }
+                setGlobalPropagator(e) {
+                    return (0, n.registerGlobal)(u, e, s.DiagAPI.instance());
+                }
+                inject(e, t, r = o.defaultTextMapSetter) {
+                    return this._getGlobalPropagator().inject(e, t, r);
+                }
+                extract(e, t, r = o.defaultTextMapGetter) {
+                    return this._getGlobalPropagator().extract(e, t, r);
+                }
+                fields() {
+                    return this._getGlobalPropagator().fields();
+                }
+                disable() {
+                    (0, n.unregisterGlobal)(u, s.DiagAPI.instance());
+                }
+                _getGlobalPropagator() {
+                    return (0, n.getGlobal)(u) || l;
+                }
+            }
+            t.PropagationAPI = PropagationAPI;
+        },
+        997: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.TraceAPI = void 0;
+            const n = r(172);
+            const a = r(846);
+            const o = r(139);
+            const i = r(607);
+            const c = r(930);
+            const s = "trace";
+            class TraceAPI {
+                constructor(){
+                    this._proxyTracerProvider = new a.ProxyTracerProvider;
+                    this.wrapSpanContext = o.wrapSpanContext;
+                    this.isSpanContextValid = o.isSpanContextValid;
+                    this.deleteSpan = i.deleteSpan;
+                    this.getSpan = i.getSpan;
+                    this.getActiveSpan = i.getActiveSpan;
+                    this.getSpanContext = i.getSpanContext;
+                    this.setSpan = i.setSpan;
+                    this.setSpanContext = i.setSpanContext;
+                }
+                static getInstance() {
+                    if (!this._instance) {
+                        this._instance = new TraceAPI;
+                    }
+                    return this._instance;
+                }
+                setGlobalTracerProvider(e) {
+                    const t = (0, n.registerGlobal)(s, this._proxyTracerProvider, c.DiagAPI.instance());
+                    if (t) {
+                        this._proxyTracerProvider.setDelegate(e);
+                    }
+                    return t;
+                }
+                getTracerProvider() {
+                    return (0, n.getGlobal)(s) || this._proxyTracerProvider;
+                }
+                getTracer(e, t) {
+                    return this.getTracerProvider().getTracer(e, t);
+                }
+                disable() {
+                    (0, n.unregisterGlobal)(s, c.DiagAPI.instance());
+                    this._proxyTracerProvider = new a.ProxyTracerProvider;
+                }
+            }
+            t.TraceAPI = TraceAPI;
+        },
+        277: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.deleteBaggage = t.setBaggage = t.getActiveBaggage = t.getBaggage = void 0;
+            const n = r(491);
+            const a = r(780);
+            const o = (0, a.createContextKey)("OpenTelemetry Baggage Key");
+            function getBaggage(e) {
+                return e.getValue(o) || undefined;
+            }
+            t.getBaggage = getBaggage;
+            function getActiveBaggage() {
+                return getBaggage(n.ContextAPI.getInstance().active());
+            }
+            t.getActiveBaggage = getActiveBaggage;
+            function setBaggage(e, t) {
+                return e.setValue(o, t);
+            }
+            t.setBaggage = setBaggage;
+            function deleteBaggage(e) {
+                return e.deleteValue(o);
+            }
+            t.deleteBaggage = deleteBaggage;
+        },
+        993: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.BaggageImpl = void 0;
+            class BaggageImpl {
+                constructor(e){
+                    this._entries = e ? new Map(e) : new Map;
+                }
+                getEntry(e) {
+                    const t = this._entries.get(e);
+                    if (!t) {
+                        return undefined;
+                    }
+                    return Object.assign({}, t);
+                }
+                getAllEntries() {
+                    return Array.from(this._entries.entries()).map(([e, t])=>[
+                            e,
+                            t
+                        ]);
+                }
+                setEntry(e, t) {
+                    const r = new BaggageImpl(this._entries);
+                    r._entries.set(e, t);
+                    return r;
+                }
+                removeEntry(e) {
+                    const t = new BaggageImpl(this._entries);
+                    t._entries.delete(e);
+                    return t;
+                }
+                removeEntries(...e) {
+                    const t = new BaggageImpl(this._entries);
+                    for (const r of e){
+                        t._entries.delete(r);
+                    }
+                    return t;
+                }
+                clear() {
+                    return new BaggageImpl;
+                }
+            }
+            t.BaggageImpl = BaggageImpl;
+        },
+        830: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.baggageEntryMetadataSymbol = void 0;
+            t.baggageEntryMetadataSymbol = Symbol("BaggageEntryMetadata");
+        },
+        369: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.baggageEntryMetadataFromString = t.createBaggage = void 0;
+            const n = r(930);
+            const a = r(993);
+            const o = r(830);
+            const i = n.DiagAPI.instance();
+            function createBaggage(e = {}) {
+                return new a.BaggageImpl(new Map(Object.entries(e)));
+            }
+            t.createBaggage = createBaggage;
+            function baggageEntryMetadataFromString(e) {
+                if (typeof e !== "string") {
+                    i.error(`Cannot create baggage metadata from unknown type: ${typeof e}`);
+                    e = "";
+                }
+                return {
+                    __TYPE__: o.baggageEntryMetadataSymbol,
+                    toString () {
+                        return e;
+                    }
+                };
+            }
+            t.baggageEntryMetadataFromString = baggageEntryMetadataFromString;
+        },
+        67: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.context = void 0;
+            const n = r(491);
+            t.context = n.ContextAPI.getInstance();
+        },
+        223: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.NoopContextManager = void 0;
+            const n = r(780);
+            class NoopContextManager {
+                active() {
+                    return n.ROOT_CONTEXT;
+                }
+                with(e, t, r, ...n) {
+                    return t.call(r, ...n);
+                }
+                bind(e, t) {
+                    return t;
+                }
+                enable() {
+                    return this;
+                }
+                disable() {
+                    return this;
+                }
+            }
+            t.NoopContextManager = NoopContextManager;
+        },
+        780: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.ROOT_CONTEXT = t.createContextKey = void 0;
+            function createContextKey(e) {
+                return Symbol.for(e);
+            }
+            t.createContextKey = createContextKey;
+            class BaseContext {
+                constructor(e){
+                    const t = this;
+                    t._currentContext = e ? new Map(e) : new Map;
+                    t.getValue = (e)=>t._currentContext.get(e);
+                    t.setValue = (e, r)=>{
+                        const n = new BaseContext(t._currentContext);
+                        n._currentContext.set(e, r);
+                        return n;
+                    };
+                    t.deleteValue = (e)=>{
+                        const r = new BaseContext(t._currentContext);
+                        r._currentContext.delete(e);
+                        return r;
+                    };
+                }
+            }
+            t.ROOT_CONTEXT = new BaseContext;
+        },
+        506: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.diag = void 0;
+            const n = r(930);
+            t.diag = n.DiagAPI.instance();
+        },
+        56: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.DiagComponentLogger = void 0;
+            const n = r(172);
+            class DiagComponentLogger {
+                constructor(e){
+                    this._namespace = e.namespace || "DiagComponentLogger";
+                }
+                debug(...e) {
+                    return logProxy("debug", this._namespace, e);
+                }
+                error(...e) {
+                    return logProxy("error", this._namespace, e);
+                }
+                info(...e) {
+                    return logProxy("info", this._namespace, e);
+                }
+                warn(...e) {
+                    return logProxy("warn", this._namespace, e);
+                }
+                verbose(...e) {
+                    return logProxy("verbose", this._namespace, e);
+                }
+            }
+            t.DiagComponentLogger = DiagComponentLogger;
+            function logProxy(e, t, r) {
+                const a = (0, n.getGlobal)("diag");
+                if (!a) {
+                    return;
+                }
+                r.unshift(t);
+                return a[e](...r);
+            }
+        },
+        972: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.DiagConsoleLogger = void 0;
+            const r = [
+                {
+                    n: "error",
+                    c: "error"
+                },
+                {
+                    n: "warn",
+                    c: "warn"
+                },
+                {
+                    n: "info",
+                    c: "info"
+                },
+                {
+                    n: "debug",
+                    c: "debug"
+                },
+                {
+                    n: "verbose",
+                    c: "trace"
+                }
+            ];
+            class DiagConsoleLogger {
+                constructor(){
+                    function _consoleFunc(e) {
+                        return function(...t) {
+                            if (console) {
+                                let r = console[e];
+                                if (typeof r !== "function") {
+                                    r = console.log;
+                                }
+                                if (typeof r === "function") {
+                                    return r.apply(console, t);
+                                }
+                            }
+                        };
+                    }
+                    for(let e = 0; e < r.length; e++){
+                        this[r[e].n] = _consoleFunc(r[e].c);
+                    }
+                }
+            }
+            t.DiagConsoleLogger = DiagConsoleLogger;
+        },
+        912: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.createLogLevelDiagLogger = void 0;
+            const n = r(957);
+            function createLogLevelDiagLogger(e, t) {
+                if (e < n.DiagLogLevel.NONE) {
+                    e = n.DiagLogLevel.NONE;
+                } else if (e > n.DiagLogLevel.ALL) {
+                    e = n.DiagLogLevel.ALL;
+                }
+                t = t || {};
+                function _filterFunc(r, n) {
+                    const a = t[r];
+                    if (typeof a === "function" && e >= n) {
+                        return a.bind(t);
+                    }
+                    return function() {};
+                }
+                return {
+                    error: _filterFunc("error", n.DiagLogLevel.ERROR),
+                    warn: _filterFunc("warn", n.DiagLogLevel.WARN),
+                    info: _filterFunc("info", n.DiagLogLevel.INFO),
+                    debug: _filterFunc("debug", n.DiagLogLevel.DEBUG),
+                    verbose: _filterFunc("verbose", n.DiagLogLevel.VERBOSE)
+                };
+            }
+            t.createLogLevelDiagLogger = createLogLevelDiagLogger;
+        },
+        957: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.DiagLogLevel = void 0;
+            var r;
+            (function(e) {
+                e[e["NONE"] = 0] = "NONE";
+                e[e["ERROR"] = 30] = "ERROR";
+                e[e["WARN"] = 50] = "WARN";
+                e[e["INFO"] = 60] = "INFO";
+                e[e["DEBUG"] = 70] = "DEBUG";
+                e[e["VERBOSE"] = 80] = "VERBOSE";
+                e[e["ALL"] = 9999] = "ALL";
+            })(r = t.DiagLogLevel || (t.DiagLogLevel = {}));
+        },
+        172: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.unregisterGlobal = t.getGlobal = t.registerGlobal = void 0;
+            const n = r(200);
+            const a = r(521);
+            const o = r(130);
+            const i = a.VERSION.split(".")[0];
+            const c = Symbol.for(`opentelemetry.js.api.${i}`);
+            const s = n._globalThis;
+            function registerGlobal(e, t, r, n = false) {
+                var o;
+                const i = s[c] = (o = s[c]) !== null && o !== void 0 ? o : {
+                    version: a.VERSION
+                };
+                if (!n && i[e]) {
+                    const t = new Error(`@opentelemetry/api: Attempted duplicate registration of API: ${e}`);
+                    r.error(t.stack || t.message);
+                    return false;
+                }
+                if (i.version !== a.VERSION) {
+                    const t = new Error(`@opentelemetry/api: Registration of version v${i.version} for ${e} does not match previously registered API v${a.VERSION}`);
+                    r.error(t.stack || t.message);
+                    return false;
+                }
+                i[e] = t;
+                r.debug(`@opentelemetry/api: Registered a global for ${e} v${a.VERSION}.`);
+                return true;
+            }
+            t.registerGlobal = registerGlobal;
+            function getGlobal(e) {
+                var t, r;
+                const n = (t = s[c]) === null || t === void 0 ? void 0 : t.version;
+                if (!n || !(0, o.isCompatible)(n)) {
+                    return;
+                }
+                return (r = s[c]) === null || r === void 0 ? void 0 : r[e];
+            }
+            t.getGlobal = getGlobal;
+            function unregisterGlobal(e, t) {
+                t.debug(`@opentelemetry/api: Unregistering a global for ${e} v${a.VERSION}.`);
+                const r = s[c];
+                if (r) {
+                    delete r[e];
+                }
+            }
+            t.unregisterGlobal = unregisterGlobal;
+        },
+        130: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.isCompatible = t._makeCompatibilityCheck = void 0;
+            const n = r(521);
+            const a = /^(\d+)\.(\d+)\.(\d+)(-(.+))?$/;
+            function _makeCompatibilityCheck(e) {
+                const t = new Set([
+                    e
+                ]);
+                const r = new Set;
+                const n = e.match(a);
+                if (!n) {
+                    return ()=>false;
+                }
+                const o = {
+                    major: +n[1],
+                    minor: +n[2],
+                    patch: +n[3],
+                    prerelease: n[4]
+                };
+                if (o.prerelease != null) {
+                    return function isExactmatch(t) {
+                        return t === e;
+                    };
+                }
+                function _reject(e) {
+                    r.add(e);
+                    return false;
+                }
+                function _accept(e) {
+                    t.add(e);
+                    return true;
+                }
+                return function isCompatible(e) {
+                    if (t.has(e)) {
+                        return true;
+                    }
+                    if (r.has(e)) {
+                        return false;
+                    }
+                    const n = e.match(a);
+                    if (!n) {
+                        return _reject(e);
+                    }
+                    const i = {
+                        major: +n[1],
+                        minor: +n[2],
+                        patch: +n[3],
+                        prerelease: n[4]
+                    };
+                    if (i.prerelease != null) {
+                        return _reject(e);
+                    }
+                    if (o.major !== i.major) {
+                        return _reject(e);
+                    }
+                    if (o.major === 0) {
+                        if (o.minor === i.minor && o.patch <= i.patch) {
+                            return _accept(e);
+                        }
+                        return _reject(e);
+                    }
+                    if (o.minor <= i.minor) {
+                        return _accept(e);
+                    }
+                    return _reject(e);
+                };
+            }
+            t._makeCompatibilityCheck = _makeCompatibilityCheck;
+            t.isCompatible = _makeCompatibilityCheck(n.VERSION);
+        },
+        886: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.metrics = void 0;
+            const n = r(653);
+            t.metrics = n.MetricsAPI.getInstance();
+        },
+        901: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.ValueType = void 0;
+            var r;
+            (function(e) {
+                e[e["INT"] = 0] = "INT";
+                e[e["DOUBLE"] = 1] = "DOUBLE";
+            })(r = t.ValueType || (t.ValueType = {}));
+        },
+        102: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.createNoopMeter = t.NOOP_OBSERVABLE_UP_DOWN_COUNTER_METRIC = t.NOOP_OBSERVABLE_GAUGE_METRIC = t.NOOP_OBSERVABLE_COUNTER_METRIC = t.NOOP_UP_DOWN_COUNTER_METRIC = t.NOOP_HISTOGRAM_METRIC = t.NOOP_COUNTER_METRIC = t.NOOP_METER = t.NoopObservableUpDownCounterMetric = t.NoopObservableGaugeMetric = t.NoopObservableCounterMetric = t.NoopObservableMetric = t.NoopHistogramMetric = t.NoopUpDownCounterMetric = t.NoopCounterMetric = t.NoopMetric = t.NoopMeter = void 0;
+            class NoopMeter {
+                constructor(){}
+                createHistogram(e, r) {
+                    return t.NOOP_HISTOGRAM_METRIC;
+                }
+                createCounter(e, r) {
+                    return t.NOOP_COUNTER_METRIC;
+                }
+                createUpDownCounter(e, r) {
+                    return t.NOOP_UP_DOWN_COUNTER_METRIC;
+                }
+                createObservableGauge(e, r) {
+                    return t.NOOP_OBSERVABLE_GAUGE_METRIC;
+                }
+                createObservableCounter(e, r) {
+                    return t.NOOP_OBSERVABLE_COUNTER_METRIC;
+                }
+                createObservableUpDownCounter(e, r) {
+                    return t.NOOP_OBSERVABLE_UP_DOWN_COUNTER_METRIC;
+                }
+                addBatchObservableCallback(e, t) {}
+                removeBatchObservableCallback(e) {}
+            }
+            t.NoopMeter = NoopMeter;
+            class NoopMetric {
+            }
+            t.NoopMetric = NoopMetric;
+            class NoopCounterMetric extends NoopMetric {
+                add(e, t) {}
+            }
+            t.NoopCounterMetric = NoopCounterMetric;
+            class NoopUpDownCounterMetric extends NoopMetric {
+                add(e, t) {}
+            }
+            t.NoopUpDownCounterMetric = NoopUpDownCounterMetric;
+            class NoopHistogramMetric extends NoopMetric {
+                record(e, t) {}
+            }
+            t.NoopHistogramMetric = NoopHistogramMetric;
+            class NoopObservableMetric {
+                addCallback(e) {}
+                removeCallback(e) {}
+            }
+            t.NoopObservableMetric = NoopObservableMetric;
+            class NoopObservableCounterMetric extends NoopObservableMetric {
+            }
+            t.NoopObservableCounterMetric = NoopObservableCounterMetric;
+            class NoopObservableGaugeMetric extends NoopObservableMetric {
+            }
+            t.NoopObservableGaugeMetric = NoopObservableGaugeMetric;
+            class NoopObservableUpDownCounterMetric extends NoopObservableMetric {
+            }
+            t.NoopObservableUpDownCounterMetric = NoopObservableUpDownCounterMetric;
+            t.NOOP_METER = new NoopMeter;
+            t.NOOP_COUNTER_METRIC = new NoopCounterMetric;
+            t.NOOP_HISTOGRAM_METRIC = new NoopHistogramMetric;
+            t.NOOP_UP_DOWN_COUNTER_METRIC = new NoopUpDownCounterMetric;
+            t.NOOP_OBSERVABLE_COUNTER_METRIC = new NoopObservableCounterMetric;
+            t.NOOP_OBSERVABLE_GAUGE_METRIC = new NoopObservableGaugeMetric;
+            t.NOOP_OBSERVABLE_UP_DOWN_COUNTER_METRIC = new NoopObservableUpDownCounterMetric;
+            function createNoopMeter() {
+                return t.NOOP_METER;
+            }
+            t.createNoopMeter = createNoopMeter;
+        },
+        660: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.NOOP_METER_PROVIDER = t.NoopMeterProvider = void 0;
+            const n = r(102);
+            class NoopMeterProvider {
+                getMeter(e, t, r) {
+                    return n.NOOP_METER;
+                }
+            }
+            t.NoopMeterProvider = NoopMeterProvider;
+            t.NOOP_METER_PROVIDER = new NoopMeterProvider;
+        },
+        200: function(e, t, r) {
+            var n = this && this.__createBinding || (Object.create ? function(e, t, r, n) {
+                if (n === undefined) n = r;
+                Object.defineProperty(e, n, {
+                    enumerable: true,
+                    get: function() {
+                        return t[r];
+                    }
+                });
+            } : function(e, t, r, n) {
+                if (n === undefined) n = r;
+                e[n] = t[r];
+            });
+            var a = this && this.__exportStar || function(e, t) {
+                for(var r in e)if (r !== "default" && !Object.prototype.hasOwnProperty.call(t, r)) n(t, e, r);
+            };
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            a(r(46), t);
+        },
+        651: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t._globalThis = void 0;
+            t._globalThis = typeof globalThis === "object" ? globalThis : __webpack_require__.g;
+        },
+        46: function(e, t, r) {
+            var n = this && this.__createBinding || (Object.create ? function(e, t, r, n) {
+                if (n === undefined) n = r;
+                Object.defineProperty(e, n, {
+                    enumerable: true,
+                    get: function() {
+                        return t[r];
+                    }
+                });
+            } : function(e, t, r, n) {
+                if (n === undefined) n = r;
+                e[n] = t[r];
+            });
+            var a = this && this.__exportStar || function(e, t) {
+                for(var r in e)if (r !== "default" && !Object.prototype.hasOwnProperty.call(t, r)) n(t, e, r);
+            };
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            a(r(651), t);
+        },
+        939: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.propagation = void 0;
+            const n = r(181);
+            t.propagation = n.PropagationAPI.getInstance();
+        },
+        874: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.NoopTextMapPropagator = void 0;
+            class NoopTextMapPropagator {
+                inject(e, t) {}
+                extract(e, t) {
+                    return e;
+                }
+                fields() {
+                    return [];
+                }
+            }
+            t.NoopTextMapPropagator = NoopTextMapPropagator;
+        },
+        194: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.defaultTextMapSetter = t.defaultTextMapGetter = void 0;
+            t.defaultTextMapGetter = {
+                get (e, t) {
+                    if (e == null) {
+                        return undefined;
+                    }
+                    return e[t];
+                },
+                keys (e) {
+                    if (e == null) {
+                        return [];
+                    }
+                    return Object.keys(e);
+                }
+            };
+            t.defaultTextMapSetter = {
+                set (e, t, r) {
+                    if (e == null) {
+                        return;
+                    }
+                    e[t] = r;
+                }
+            };
+        },
+        845: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.trace = void 0;
+            const n = r(997);
+            t.trace = n.TraceAPI.getInstance();
+        },
+        403: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.NonRecordingSpan = void 0;
+            const n = r(476);
+            class NonRecordingSpan {
+                constructor(e = n.INVALID_SPAN_CONTEXT){
+                    this._spanContext = e;
+                }
+                spanContext() {
+                    return this._spanContext;
+                }
+                setAttribute(e, t) {
+                    return this;
+                }
+                setAttributes(e) {
+                    return this;
+                }
+                addEvent(e, t) {
+                    return this;
+                }
+                setStatus(e) {
+                    return this;
+                }
+                updateName(e) {
+                    return this;
+                }
+                end(e) {}
+                isRecording() {
+                    return false;
+                }
+                recordException(e, t) {}
+            }
+            t.NonRecordingSpan = NonRecordingSpan;
+        },
+        614: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.NoopTracer = void 0;
+            const n = r(491);
+            const a = r(607);
+            const o = r(403);
+            const i = r(139);
+            const c = n.ContextAPI.getInstance();
+            class NoopTracer {
+                startSpan(e, t, r = c.active()) {
+                    const n = Boolean(t === null || t === void 0 ? void 0 : t.root);
+                    if (n) {
+                        return new o.NonRecordingSpan;
+                    }
+                    const s = r && (0, a.getSpanContext)(r);
+                    if (isSpanContext(s) && (0, i.isSpanContextValid)(s)) {
+                        return new o.NonRecordingSpan(s);
+                    } else {
+                        return new o.NonRecordingSpan;
+                    }
+                }
+                startActiveSpan(e, t, r, n) {
+                    let o;
+                    let i;
+                    let s;
+                    if (arguments.length < 2) {
+                        return;
+                    } else if (arguments.length === 2) {
+                        s = t;
+                    } else if (arguments.length === 3) {
+                        o = t;
+                        s = r;
+                    } else {
+                        o = t;
+                        i = r;
+                        s = n;
+                    }
+                    const u = i !== null && i !== void 0 ? i : c.active();
+                    const l = this.startSpan(e, o, u);
+                    const g = (0, a.setSpan)(u, l);
+                    return c.with(g, s, undefined, l);
+                }
+            }
+            t.NoopTracer = NoopTracer;
+            function isSpanContext(e) {
+                return typeof e === "object" && typeof e["spanId"] === "string" && typeof e["traceId"] === "string" && typeof e["traceFlags"] === "number";
+            }
+        },
+        124: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.NoopTracerProvider = void 0;
+            const n = r(614);
+            class NoopTracerProvider {
+                getTracer(e, t, r) {
+                    return new n.NoopTracer;
+                }
+            }
+            t.NoopTracerProvider = NoopTracerProvider;
+        },
+        125: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.ProxyTracer = void 0;
+            const n = r(614);
+            const a = new n.NoopTracer;
+            class ProxyTracer {
+                constructor(e, t, r, n){
+                    this._provider = e;
+                    this.name = t;
+                    this.version = r;
+                    this.options = n;
+                }
+                startSpan(e, t, r) {
+                    return this._getTracer().startSpan(e, t, r);
+                }
+                startActiveSpan(e, t, r, n) {
+                    const a = this._getTracer();
+                    return Reflect.apply(a.startActiveSpan, a, arguments);
+                }
+                _getTracer() {
+                    if (this._delegate) {
+                        return this._delegate;
+                    }
+                    const e = this._provider.getDelegateTracer(this.name, this.version, this.options);
+                    if (!e) {
+                        return a;
+                    }
+                    this._delegate = e;
+                    return this._delegate;
+                }
+            }
+            t.ProxyTracer = ProxyTracer;
+        },
+        846: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.ProxyTracerProvider = void 0;
+            const n = r(125);
+            const a = r(124);
+            const o = new a.NoopTracerProvider;
+            class ProxyTracerProvider {
+                getTracer(e, t, r) {
+                    var a;
+                    return (a = this.getDelegateTracer(e, t, r)) !== null && a !== void 0 ? a : new n.ProxyTracer(this, e, t, r);
+                }
+                getDelegate() {
+                    var e;
+                    return (e = this._delegate) !== null && e !== void 0 ? e : o;
+                }
+                setDelegate(e) {
+                    this._delegate = e;
+                }
+                getDelegateTracer(e, t, r) {
+                    var n;
+                    return (n = this._delegate) === null || n === void 0 ? void 0 : n.getTracer(e, t, r);
+                }
+            }
+            t.ProxyTracerProvider = ProxyTracerProvider;
+        },
+        996: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.SamplingDecision = void 0;
+            var r;
+            (function(e) {
+                e[e["NOT_RECORD"] = 0] = "NOT_RECORD";
+                e[e["RECORD"] = 1] = "RECORD";
+                e[e["RECORD_AND_SAMPLED"] = 2] = "RECORD_AND_SAMPLED";
+            })(r = t.SamplingDecision || (t.SamplingDecision = {}));
+        },
+        607: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.getSpanContext = t.setSpanContext = t.deleteSpan = t.setSpan = t.getActiveSpan = t.getSpan = void 0;
+            const n = r(780);
+            const a = r(403);
+            const o = r(491);
+            const i = (0, n.createContextKey)("OpenTelemetry Context Key SPAN");
+            function getSpan(e) {
+                return e.getValue(i) || undefined;
+            }
+            t.getSpan = getSpan;
+            function getActiveSpan() {
+                return getSpan(o.ContextAPI.getInstance().active());
+            }
+            t.getActiveSpan = getActiveSpan;
+            function setSpan(e, t) {
+                return e.setValue(i, t);
+            }
+            t.setSpan = setSpan;
+            function deleteSpan(e) {
+                return e.deleteValue(i);
+            }
+            t.deleteSpan = deleteSpan;
+            function setSpanContext(e, t) {
+                return setSpan(e, new a.NonRecordingSpan(t));
+            }
+            t.setSpanContext = setSpanContext;
+            function getSpanContext(e) {
+                var t;
+                return (t = getSpan(e)) === null || t === void 0 ? void 0 : t.spanContext();
+            }
+            t.getSpanContext = getSpanContext;
+        },
+        325: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.TraceStateImpl = void 0;
+            const n = r(564);
+            const a = 32;
+            const o = 512;
+            const i = ",";
+            const c = "=";
+            class TraceStateImpl {
+                constructor(e){
+                    this._internalState = new Map;
+                    if (e) this._parse(e);
+                }
+                set(e, t) {
+                    const r = this._clone();
+                    if (r._internalState.has(e)) {
+                        r._internalState.delete(e);
+                    }
+                    r._internalState.set(e, t);
+                    return r;
+                }
+                unset(e) {
+                    const t = this._clone();
+                    t._internalState.delete(e);
+                    return t;
+                }
+                get(e) {
+                    return this._internalState.get(e);
+                }
+                serialize() {
+                    return this._keys().reduce((e, t)=>{
+                        e.push(t + c + this.get(t));
+                        return e;
+                    }, []).join(i);
+                }
+                _parse(e) {
+                    if (e.length > o) return;
+                    this._internalState = e.split(i).reverse().reduce((e, t)=>{
+                        const r = t.trim();
+                        const a = r.indexOf(c);
+                        if (a !== -1) {
+                            const o = r.slice(0, a);
+                            const i = r.slice(a + 1, t.length);
+                            if ((0, n.validateKey)(o) && (0, n.validateValue)(i)) {
+                                e.set(o, i);
+                            } else {}
+                        }
+                        return e;
+                    }, new Map);
+                    if (this._internalState.size > a) {
+                        this._internalState = new Map(Array.from(this._internalState.entries()).reverse().slice(0, a));
+                    }
+                }
+                _keys() {
+                    return Array.from(this._internalState.keys()).reverse();
+                }
+                _clone() {
+                    const e = new TraceStateImpl;
+                    e._internalState = new Map(this._internalState);
+                    return e;
+                }
+            }
+            t.TraceStateImpl = TraceStateImpl;
+        },
+        564: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.validateValue = t.validateKey = void 0;
+            const r = "[_0-9a-z-*/]";
+            const n = `[a-z]${r}{0,255}`;
+            const a = `[a-z0-9]${r}{0,240}@[a-z]${r}{0,13}`;
+            const o = new RegExp(`^(?:${n}|${a})$`);
+            const i = /^[ -~]{0,255}[!-~]$/;
+            const c = /,|=/;
+            function validateKey(e) {
+                return o.test(e);
+            }
+            t.validateKey = validateKey;
+            function validateValue(e) {
+                return i.test(e) && !c.test(e);
+            }
+            t.validateValue = validateValue;
+        },
+        98: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.createTraceState = void 0;
+            const n = r(325);
+            function createTraceState(e) {
+                return new n.TraceStateImpl(e);
+            }
+            t.createTraceState = createTraceState;
+        },
+        476: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.INVALID_SPAN_CONTEXT = t.INVALID_TRACEID = t.INVALID_SPANID = void 0;
+            const n = r(475);
+            t.INVALID_SPANID = "0000000000000000";
+            t.INVALID_TRACEID = "00000000000000000000000000000000";
+            t.INVALID_SPAN_CONTEXT = {
+                traceId: t.INVALID_TRACEID,
+                spanId: t.INVALID_SPANID,
+                traceFlags: n.TraceFlags.NONE
+            };
+        },
+        357: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.SpanKind = void 0;
+            var r;
+            (function(e) {
+                e[e["INTERNAL"] = 0] = "INTERNAL";
+                e[e["SERVER"] = 1] = "SERVER";
+                e[e["CLIENT"] = 2] = "CLIENT";
+                e[e["PRODUCER"] = 3] = "PRODUCER";
+                e[e["CONSUMER"] = 4] = "CONSUMER";
+            })(r = t.SpanKind || (t.SpanKind = {}));
+        },
+        139: (e, t, r)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.wrapSpanContext = t.isSpanContextValid = t.isValidSpanId = t.isValidTraceId = void 0;
+            const n = r(476);
+            const a = r(403);
+            const o = /^([0-9a-f]{32})$/i;
+            const i = /^[0-9a-f]{16}$/i;
+            function isValidTraceId(e) {
+                return o.test(e) && e !== n.INVALID_TRACEID;
+            }
+            t.isValidTraceId = isValidTraceId;
+            function isValidSpanId(e) {
+                return i.test(e) && e !== n.INVALID_SPANID;
+            }
+            t.isValidSpanId = isValidSpanId;
+            function isSpanContextValid(e) {
+                return isValidTraceId(e.traceId) && isValidSpanId(e.spanId);
+            }
+            t.isSpanContextValid = isSpanContextValid;
+            function wrapSpanContext(e) {
+                return new a.NonRecordingSpan(e);
+            }
+            t.wrapSpanContext = wrapSpanContext;
+        },
+        847: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.SpanStatusCode = void 0;
+            var r;
+            (function(e) {
+                e[e["UNSET"] = 0] = "UNSET";
+                e[e["OK"] = 1] = "OK";
+                e[e["ERROR"] = 2] = "ERROR";
+            })(r = t.SpanStatusCode || (t.SpanStatusCode = {}));
+        },
+        475: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.TraceFlags = void 0;
+            var r;
+            (function(e) {
+                e[e["NONE"] = 0] = "NONE";
+                e[e["SAMPLED"] = 1] = "SAMPLED";
+            })(r = t.TraceFlags || (t.TraceFlags = {}));
+        },
+        521: (e, t)=>{
+            Object.defineProperty(t, "__esModule", {
+                value: true
+            });
+            t.VERSION = void 0;
+            t.VERSION = "1.6.0";
+        }
+    };
+    var t = {};
+    function __nccwpck_require__(r) {
+        var n = t[r];
+        if (n !== undefined) {
+            return n.exports;
+        }
+        var a = t[r] = {
+            exports: {}
+        };
+        var o = true;
+        try {
+            e[r].call(a.exports, a, a.exports, __nccwpck_require__);
+            o = false;
+        } finally{
+            if (o) delete t[r];
+        }
+        return a.exports;
+    }
+    if (typeof __nccwpck_require__ !== "undefined") __nccwpck_require__.ab = __dirname + "/";
+    var r = {};
+    (()=>{
+        var e = r;
+        Object.defineProperty(e, "__esModule", {
+            value: true
+        });
+        e.trace = e.propagation = e.metrics = e.diag = e.context = e.INVALID_SPAN_CONTEXT = e.INVALID_TRACEID = e.INVALID_SPANID = e.isValidSpanId = e.isValidTraceId = e.isSpanContextValid = e.createTraceState = e.TraceFlags = e.SpanStatusCode = e.SpanKind = e.SamplingDecision = e.ProxyTracerProvider = e.ProxyTracer = e.defaultTextMapSetter = e.defaultTextMapGetter = e.ValueType = e.createNoopMeter = e.DiagLogLevel = e.DiagConsoleLogger = e.ROOT_CONTEXT = e.createContextKey = e.baggageEntryMetadataFromString = void 0;
+        var t = __nccwpck_require__(369);
+        Object.defineProperty(e, "baggageEntryMetadataFromString", {
+            enumerable: true,
+            get: function() {
+                return t.baggageEntryMetadataFromString;
+            }
+        });
+        var n = __nccwpck_require__(780);
+        Object.defineProperty(e, "createContextKey", {
+            enumerable: true,
+            get: function() {
+                return n.createContextKey;
+            }
+        });
+        Object.defineProperty(e, "ROOT_CONTEXT", {
+            enumerable: true,
+            get: function() {
+                return n.ROOT_CONTEXT;
+            }
+        });
+        var a = __nccwpck_require__(972);
+        Object.defineProperty(e, "DiagConsoleLogger", {
+            enumerable: true,
+            get: function() {
+                return a.DiagConsoleLogger;
+            }
+        });
+        var o = __nccwpck_require__(957);
+        Object.defineProperty(e, "DiagLogLevel", {
+            enumerable: true,
+            get: function() {
+                return o.DiagLogLevel;
+            }
+        });
+        var i = __nccwpck_require__(102);
+        Object.defineProperty(e, "createNoopMeter", {
+            enumerable: true,
+            get: function() {
+                return i.createNoopMeter;
+            }
+        });
+        var c = __nccwpck_require__(901);
+        Object.defineProperty(e, "ValueType", {
+            enumerable: true,
+            get: function() {
+                return c.ValueType;
+            }
+        });
+        var s = __nccwpck_require__(194);
+        Object.defineProperty(e, "defaultTextMapGetter", {
+            enumerable: true,
+            get: function() {
+                return s.defaultTextMapGetter;
+            }
+        });
+        Object.defineProperty(e, "defaultTextMapSetter", {
+            enumerable: true,
+            get: function() {
+                return s.defaultTextMapSetter;
+            }
+        });
+        var u = __nccwpck_require__(125);
+        Object.defineProperty(e, "ProxyTracer", {
+            enumerable: true,
+            get: function() {
+                return u.ProxyTracer;
+            }
+        });
+        var l = __nccwpck_require__(846);
+        Object.defineProperty(e, "ProxyTracerProvider", {
+            enumerable: true,
+            get: function() {
+                return l.ProxyTracerProvider;
+            }
+        });
+        var g = __nccwpck_require__(996);
+        Object.defineProperty(e, "SamplingDecision", {
+            enumerable: true,
+            get: function() {
+                return g.SamplingDecision;
+            }
+        });
+        var p = __nccwpck_require__(357);
+        Object.defineProperty(e, "SpanKind", {
+            enumerable: true,
+            get: function() {
+                return p.SpanKind;
+            }
+        });
+        var d = __nccwpck_require__(847);
+        Object.defineProperty(e, "SpanStatusCode", {
+            enumerable: true,
+            get: function() {
+                return d.SpanStatusCode;
+            }
+        });
+        var _ = __nccwpck_require__(475);
+        Object.defineProperty(e, "TraceFlags", {
+            enumerable: true,
+            get: function() {
+                return _.TraceFlags;
+            }
+        });
+        var f = __nccwpck_require__(98);
+        Object.defineProperty(e, "createTraceState", {
+            enumerable: true,
+            get: function() {
+                return f.createTraceState;
+            }
+        });
+        var b = __nccwpck_require__(139);
+        Object.defineProperty(e, "isSpanContextValid", {
+            enumerable: true,
+            get: function() {
+                return b.isSpanContextValid;
+            }
+        });
+        Object.defineProperty(e, "isValidTraceId", {
+            enumerable: true,
+            get: function() {
+                return b.isValidTraceId;
+            }
+        });
+        Object.defineProperty(e, "isValidSpanId", {
+            enumerable: true,
+            get: function() {
+                return b.isValidSpanId;
+            }
+        });
+        var v = __nccwpck_require__(476);
+        Object.defineProperty(e, "INVALID_SPANID", {
+            enumerable: true,
+            get: function() {
+                return v.INVALID_SPANID;
+            }
+        });
+        Object.defineProperty(e, "INVALID_TRACEID", {
+            enumerable: true,
+            get: function() {
+                return v.INVALID_TRACEID;
+            }
+        });
+        Object.defineProperty(e, "INVALID_SPAN_CONTEXT", {
+            enumerable: true,
+            get: function() {
+                return v.INVALID_SPAN_CONTEXT;
+            }
+        });
+        const O = __nccwpck_require__(67);
+        Object.defineProperty(e, "context", {
+            enumerable: true,
+            get: function() {
+                return O.context;
+            }
+        });
+        const P = __nccwpck_require__(506);
+        Object.defineProperty(e, "diag", {
+            enumerable: true,
+            get: function() {
+                return P.diag;
+            }
+        });
+        const N = __nccwpck_require__(886);
+        Object.defineProperty(e, "metrics", {
+            enumerable: true,
+            get: function() {
+                return N.metrics;
+            }
+        });
+        const S = __nccwpck_require__(939);
+        Object.defineProperty(e, "propagation", {
+            enumerable: true,
+            get: function() {
+                return S.propagation;
+            }
+        });
+        const C = __nccwpck_require__(845);
+        Object.defineProperty(e, "trace", {
+            enumerable: true,
+            get: function() {
+                return C.trace;
+            }
+        });
+        e["default"] = {
+            context: O.context,
+            diag: P.diag,
+            metrics: N.metrics,
+            propagation: S.propagation,
+            trace: C.trace
+        };
+    })();
+    module.exports = r;
+})();
+
+
+/***/ }),
+
+/***/ 578:
 /***/ ((module) => {
 
 "use strict";
@@ -3135,7 +4967,7 @@ var __dirname = "/";
 
 /***/ }),
 
-/***/ 459:
+/***/ 253:
 /***/ ((module) => {
 
 "use strict";
@@ -3159,7 +4991,237 @@ module.exports = MODERN_BROWSERSLIST_TARGET; //# sourceMappingURL=modern-browser
 
 /***/ }),
 
-/***/ 207:
+/***/ 122:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    withRequest: function() {
+        return withRequest;
+    },
+    getTestReqInfo: function() {
+        return getTestReqInfo;
+    }
+});
+const _nodeasync_hooks = __webpack_require__(67);
+const testStorage = new _nodeasync_hooks.AsyncLocalStorage();
+function extractTestInfoFromRequest(req, reader) {
+    const proxyPortHeader = reader.header(req, "next-test-proxy-port");
+    if (!proxyPortHeader) {
+        return undefined;
+    }
+    const url = reader.url(req);
+    const proxyPort = Number(proxyPortHeader);
+    const testData = reader.header(req, "next-test-data") || "";
+    return {
+        url,
+        proxyPort,
+        testData
+    };
+}
+function withRequest(req, reader, fn) {
+    const testReqInfo = extractTestInfoFromRequest(req, reader);
+    if (!testReqInfo) {
+        return fn();
+    }
+    return testStorage.run(testReqInfo, fn);
+}
+function getTestReqInfo(req, reader) {
+    const testReqInfo = testStorage.getStore();
+    if (testReqInfo) {
+        return testReqInfo;
+    }
+    if (req && reader) {
+        return extractTestInfoFromRequest(req, reader);
+    }
+    return undefined;
+} //# sourceMappingURL=context.js.map
+
+
+/***/ }),
+
+/***/ 131:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+/* provided dependency */ var Buffer = __webpack_require__(195)["Buffer"];
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    reader: function() {
+        return reader;
+    },
+    handleFetch: function() {
+        return handleFetch;
+    },
+    interceptFetch: function() {
+        return interceptFetch;
+    }
+});
+const _context = __webpack_require__(122);
+const reader = {
+    url (req) {
+        return req.url;
+    },
+    header (req, name) {
+        return req.headers.get(name);
+    }
+};
+function getTestStack() {
+    let stack = (new Error().stack ?? "").split("\n");
+    // Skip the first line and find first non-empty line.
+    for(let i = 1; i < stack.length; i++){
+        if (stack[i].length > 0) {
+            stack = stack.slice(i);
+            break;
+        }
+    }
+    // Filter out franmework lines.
+    stack = stack.filter((f)=>!f.includes("/next/dist/"));
+    // At most 5 lines.
+    stack = stack.slice(0, 5);
+    // Cleanup some internal info and trim.
+    stack = stack.map((s)=>s.replace("webpack-internal:///(rsc)/", "").trim());
+    return stack.join("    ");
+}
+async function buildProxyRequest(testData, request) {
+    const { url, method, headers, body, cache, credentials, integrity, mode, redirect, referrer, referrerPolicy } = request;
+    return {
+        testData,
+        api: "fetch",
+        request: {
+            url,
+            method,
+            headers: [
+                ...Array.from(headers),
+                [
+                    "next-test-stack",
+                    getTestStack()
+                ]
+            ],
+            body: body ? Buffer.from(await request.arrayBuffer()).toString("base64") : null,
+            cache,
+            credentials,
+            integrity,
+            mode,
+            redirect,
+            referrer,
+            referrerPolicy
+        }
+    };
+}
+function buildResponse(proxyResponse) {
+    const { status, headers, body } = proxyResponse.response;
+    return new Response(body ? Buffer.from(body, "base64") : null, {
+        status,
+        headers: new Headers(headers)
+    });
+}
+async function handleFetch(originalFetch, request) {
+    const testInfo = (0, _context.getTestReqInfo)(request, reader);
+    if (!testInfo) {
+        throw new Error(`No test info for ${request.method} ${request.url}`);
+    }
+    const { testData, proxyPort } = testInfo;
+    const proxyRequest = await buildProxyRequest(testData, request);
+    const resp = await originalFetch(`http://localhost:${proxyPort}`, {
+        method: "POST",
+        body: JSON.stringify(proxyRequest),
+        next: {
+            // @ts-ignore
+            internal: true
+        }
+    });
+    if (!resp.ok) {
+        throw new Error(`Proxy request failed: ${resp.status}`);
+    }
+    const proxyResponse = await resp.json();
+    const { api } = proxyResponse;
+    switch(api){
+        case "continue":
+            return originalFetch(request);
+        case "abort":
+        case "unhandled":
+            throw new Error(`Proxy request aborted [${request.method} ${request.url}]`);
+        default:
+            break;
+    }
+    return buildResponse(proxyResponse);
+}
+function interceptFetch(originalFetch) {
+    __webpack_require__.g.fetch = function testFetch(input, init) {
+        var _init_next;
+        // Passthrough internal requests.
+        // @ts-ignore
+        if (init == null ? void 0 : (_init_next = init.next) == null ? void 0 : _init_next.internal) {
+            return originalFetch(input, init);
+        }
+        return handleFetch(originalFetch, new Request(input, init));
+    };
+    return ()=>{
+        __webpack_require__.g.fetch = originalFetch;
+    };
+} //# sourceMappingURL=fetch.js.map
+
+
+/***/ }),
+
+/***/ 895:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    interceptTestApis: function() {
+        return interceptTestApis;
+    },
+    wrapRequestHandler: function() {
+        return wrapRequestHandler;
+    }
+});
+const _context = __webpack_require__(122);
+const _fetch = __webpack_require__(131);
+function interceptTestApis() {
+    return (0, _fetch.interceptFetch)(__webpack_require__.g.fetch);
+}
+function wrapRequestHandler(handler) {
+    return (req, fn)=>(0, _context.withRequest)(req, _fetch.reader, ()=>handler(req, fn));
+} //# sourceMappingURL=server-edge.js.map
+
+
+/***/ }),
+
+/***/ 483:
 /***/ ((module) => {
 
 "use strict";
@@ -3257,7 +5319,7 @@ module.exports = MODERN_BROWSERSLIST_TARGET; //# sourceMappingURL=modern-browser
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
 /******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-/******/ var __webpack_exports__ = (__webpack_exec__(101));
+/******/ var __webpack_exports__ = (__webpack_exec__(467));
 /******/ (_ENTRIES = typeof _ENTRIES === "undefined" ? {} : _ENTRIES)["middleware_src/middleware"] = __webpack_exports__;
 /******/ }
 ]);

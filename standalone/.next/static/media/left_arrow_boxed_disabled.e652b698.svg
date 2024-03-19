@@ -1,0 +1,21 @@
+<svg
+  width="30"
+  height="30"
+  viewBox="0 0 30 30"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <rect
+    width="30"
+    height="30"
+    rx="5"
+    transform="matrix(0 -1 -1 0 30 30)"
+    fill="#E7E7E8"
+  />
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M13.0948 14.9997L18.4668 9.62766L17.4251 8.58594L11.0114 14.9997L17.4251 21.4134L18.4668 20.3717L13.0948 14.9997Z"
+    fill="#ADADAD"
+  />
+</svg>

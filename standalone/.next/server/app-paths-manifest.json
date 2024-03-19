@@ -1,5 +1,25 @@
 {
   "/_not-found": "app/_not-found.js",
-  "/[lng]/page": "app/[lng]/page.js",
-  "/[lng]/[...not-found]/page": "app/[lng]/[...not-found]/page.js"
+  "/[lng]/(auth)/login/page": "app/[lng]/(auth)/login/page.js",
+  "/[lng]/(auth)/callback/page": "app/[lng]/(auth)/callback/page.js",
+  "/[lng]/(auth)/reset-password/page": "app/[lng]/(auth)/reset-password/page.js",
+  "/[lng]/(auth)/check-your-email/page": "app/[lng]/(auth)/check-your-email/page.js",
+  "/[lng]/(auth)/password-updated/page": "app/[lng]/(auth)/password-updated/page.js",
+  "/[lng]/(auth)/forgot/page": "app/[lng]/(auth)/forgot/page.js",
+  "/[lng]/[...not-found]/page": "app/[lng]/[...not-found]/page.js",
+  "/[lng]/registration/page": "app/[lng]/registration/page.js",
+  "/[lng]/passwordSetting/page": "app/[lng]/passwordSetting/page.js",
+  "/[lng]/(dashboard)/quote-details/[id]/page": "app/[lng]/(dashboard)/quote-details/[id]/page.js",
+  "/[lng]/(pages)/about-us/page": "app/[lng]/(pages)/about-us/page.js",
+  "/[lng]/(pages)/buyer-quotes-listing/page": "app/[lng]/(pages)/buyer-quotes-listing/page.js",
+  "/[lng]/(pages)/buyer-enquiry-listing/page": "app/[lng]/(pages)/buyer-enquiry-listing/page.js",
+  "/[lng]/(pages)/buyer-enquiry-listing/[id]/page": "app/[lng]/(pages)/buyer-enquiry-listing/[id]/page.js",
+  "/[lng]/(pages)/page": "app/[lng]/(pages)/page.js",
+  "/[lng]/(pages)/privacy-policy/page": "app/[lng]/(pages)/privacy-policy/page.js",
+  "/[lng]/(pages)/contact-us/page": "app/[lng]/(pages)/contact-us/page.js",
+  "/[lng]/(pages)/search-results/page": "app/[lng]/(pages)/search-results/page.js",
+  "/[lng]/(pages)/quote-comparison/page": "app/[lng]/(pages)/quote-comparison/page.js",
+  "/[lng]/(pages)/search-results/[id]/page": "app/[lng]/(pages)/search-results/[id]/page.js",
+  "/[lng]/(pages)/user-enquiries/page": "app/[lng]/(pages)/user-enquiries/page.js",
+  "/[lng]/(pages)/seller-enquiry-listing/page": "app/[lng]/(pages)/seller-enquiry-listing/page.js"
 }

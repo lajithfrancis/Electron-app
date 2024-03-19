@@ -1,0 +1,22 @@
+<svg
+  width="30"
+  height="30"
+  viewBox="0 0 30 30"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <rect
+    y="30"
+    width="30"
+    height="30"
+    rx="5"
+    transform="rotate(-90 0 30)"
+    fill="#E7E7E8"
+  />
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M16.9052 14.9997L11.5332 9.62766L12.5749 8.58594L18.9886 14.9997L12.5749 21.4134L11.5332 20.3717L16.9052 14.9997Z"
+    fill="#ADADAD"
+  />
+</svg>

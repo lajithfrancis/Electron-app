@@ -1,0 +1,18 @@
+<svg width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 277132306" filter="url(#filter0_d_5324_58969)">
+<rect x="8" y="8" width="38" height="38" rx="19" fill="#F7C088" shape-rendering="crispEdges"/>
+<path id="Vector 535 (Stroke)" fill-rule="evenodd" clip-rule="evenodd" d="M24.6085 27.0165L30.5625 32.9704L29.4079 34.125L22.2994 27.0165L29.4079 19.9079L30.5625 21.0625L24.6085 27.0165Z" fill="#56381E"/>
+</g>
+<defs>
+<filter id="filter0_d_5324_58969" x="0" y="0" width="58" height="58" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="2" dy="2"/>
+<feGaussianBlur stdDeviation="5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_5324_58969"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_5324_58969" result="shape"/>
+</filter>
+</defs>
+</svg>
