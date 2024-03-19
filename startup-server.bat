@@ -1,3 +1,3 @@
 @echo off
-cd /d "D:\Projects\Electron-app\standalone"
+cd /d "%~dp0standalone"
 forever start server.js
