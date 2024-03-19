@@ -8,6 +8,7 @@ const { checkPortStatus } = require('./src/check-port-status');
 const { runScript } = require('./src/run-script');
 const { logToFile } = require('./src/log');
 const { launch } = require('./src/launch');
+const { killPortProcess } = require('kill-port-process');
 const autoLauncher = new AutoLaunch({
   name: 'My Electron App Setup 1.0.0'
 });
@@ -86,13 +87,16 @@ app.on('activate', function () {
 
 const killPort = () => {
   return new Promise((resolve) => {
-    let rootDir = app.getAppPath()
-    let last = path.basename(rootDir)
-    if (last === 'app.asar') {
-        rootDir = path.dirname(app.getPath('exe'))
-    }
-    // const scriptPath = path.join(rootDir, 'scripts');
-    runScript(path.join(rootDir, 'kill-port.bat'))
+    // let rootDir = app.getAppPath()
+    // let last = path.basename(rootDir)
+    // if (last === 'app.asar') {
+    //     rootDir = path.dirname(app.getPath('exe'))
+    // }
+    // // const scriptPath = path.join(rootDir, 'scripts');
+    // runScript(path.join(rootDir, 'kill-port.bat'))
+
+    killPortProcess(3000)
+      .then(console.log('port killed by killPortProcess'));
     setTimeout(() => {
       resolve(true)
       isLaunched = false;

@@ -1,2 +1,2 @@
 @echo off
-forever stopall
+npx kill-port 3000
