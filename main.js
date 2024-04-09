@@ -47,7 +47,10 @@ async function createWindow() {
   mainWindow.on('close', async function () {
     await killPort();
   })
-
+  
+  mainWindow.webContents.on('did-fail-load', () => {
+    mainWindow.loadURL('http://localhost:3000/en/');
+  })
 }
 
 app.on('ready', createWindow);
